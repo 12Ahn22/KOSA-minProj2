@@ -13,8 +13,10 @@
 <head>
     <meta charset="utf-8">
     <title>RATTIES | 내 작은 친구</title>
+    <%@include file="./include/bootStrap.jsp" %>
 </head>
 <body>
-
+<%@include file="./include/header.jsp" %>
+    <h1>인덱스 페이지</h1>
 </body>
 </html>
