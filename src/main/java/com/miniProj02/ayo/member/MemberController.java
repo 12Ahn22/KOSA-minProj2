@@ -35,7 +35,7 @@ public class MemberController {
         Map<String, Object> map = new HashMap<>();
 
         int updated = memberService.insert(memberVO);
-
+        // 이 아래를 한번에 처리 하는 방법이 없으려나?
         if(updated == 1) { // 성공
             map.put("status", 204);
         } else {

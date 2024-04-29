@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,8 +14,9 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class MemberService implements UserDetailsService {
     private final MemberMapper memberMapper;
-
+    private final PasswordEncoder bCryptPasswordEncoder;
     public int insert(MemberVO memberVO) {
+        memberVO.hashPassword(bCryptPasswordEncoder);
         return memberMapper.insert(memberVO);
     }
 
@@ -32,12 +33,4 @@ public class MemberService implements UserDetailsService {
         log.info("resultVO = {}", resultVO);
         return resultVO;
     }
-
-    // 디비에 저장할 암호화된 값을 만들기 위한 콘솔에 찍기위한 코드이다 (무시가능)
-    public static void main(String[] args) {
-        BCryptPasswordEncoder bcryptPasswordEncoder = new BCryptPasswordEncoder();
-        System.out.println(bcryptPasswordEncoder.encode("1004"));
-        System.out.println(bcryptPasswordEncoder.encode("0123456789010234567890123456789"));
-    }
-
 }

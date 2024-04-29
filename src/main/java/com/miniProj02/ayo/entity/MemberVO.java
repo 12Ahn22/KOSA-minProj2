@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,6 +25,11 @@ public class MemberVO  implements UserDetails {
     private String phone;
     private String gender;
     private int auth;
+
+    public MemberVO hashPassword(PasswordEncoder passwordEncoder){
+        this.password = passwordEncoder.encode(this.password);
+        return this;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

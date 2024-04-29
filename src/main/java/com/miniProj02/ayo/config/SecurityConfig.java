@@ -22,10 +22,6 @@ public class SecurityConfig {
     private final AuthFailureHandler authFailureHandler;
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
-    }
-    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
