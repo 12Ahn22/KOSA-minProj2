@@ -44,4 +44,10 @@ public class MemberController {
         }
         return map;
     }
+
+    @GetMapping("profile")
+    public String profile(){
+        log.info("=Profile=");
+        return "member/profile";
+    }
 }
