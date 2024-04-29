@@ -12,4 +12,10 @@ public class HomeController {
         log.info("=HOME=");
         return "index";
     }
+
+    @GetMapping("/intro")
+    public String intro(){
+        log.info("=INTRO=");
+        return "intro";
+    }
 }
