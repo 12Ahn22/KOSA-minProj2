@@ -14,8 +14,8 @@
     <nav>
         <ul class="nav nav-pills">
             <li class="nav-item"><a class="nav-link" href="/intro">회사소개</a></li>
-            <li class="nav-item"><a class="nav-link" href="/member/insertForm">회원가입</a></li>
-            <li class="nav-item"><a class="nav-link" href="/member/loginForm">로그인</a></li>
+            <li class="nav-item"><a class="nav-link" href="/member/insert">회원가입</a></li>
+            <li class="nav-item"><a class="nav-link" href="/member/login">로그인</a></li>
             <li class="nav-item"><a class="nav-link" href="/member/list">회원관리</a></li>
             <li class="nav-item"><a class="nav-link" href="/member/logout">로그아웃</a></li>
             <li class="nav-item"><a class="nav-link" href="/member/profile">마이페이지</a></li>

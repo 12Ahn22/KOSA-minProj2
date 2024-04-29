@@ -17,8 +17,15 @@ public class SecurityConfig {
                 .csrf((csrf) -> csrf.disable())
                 .authorizeHttpRequests((authorize) -> authorize
                         .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.ERROR).permitAll() // 이걸 해야 JSP 페이지를 포워딩 가능
-                        .requestMatchers("/","/images/**","/WEB-INF/**","/intro", "/member/insertForm","/member/loginForm**" ,"/member/insert", "/member/duplicate").permitAll()
-                        .anyRequest().authenticated());
+                        .requestMatchers("/", "/images/**", "js/**", "/WEB-INF/**", "/intro", "/member/insertForm", "/member/loginForm**", "/member/insert", "/member/login", "/member/duplicate").permitAll()
+                        .anyRequest().authenticated())
+                .formLogin(form -> form
+                        .loginPage("/member/login")
+                        .permitAll()
+                        .usernameParameter("id")
+                        .passwordParameter("password")
+                        .loginProcessingUrl("/member/login")
+                        .defaultSuccessUrl("/"));
         return http.build();
     }
 }
