@@ -9,6 +9,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -18,6 +20,10 @@ public class MemberService implements UserDetailsService {
     public int insert(MemberVO memberVO) {
         memberVO.hashPassword(bCryptPasswordEncoder);
         return memberMapper.insert(memberVO);
+    }
+
+    public MemberVO view(MemberVO memberVO) {
+        return memberMapper.view(memberVO);
     }
 
     @Override
@@ -33,4 +39,5 @@ public class MemberService implements UserDetailsService {
         log.info("resultVO = {}", resultVO);
         return resultVO;
     }
+
 }

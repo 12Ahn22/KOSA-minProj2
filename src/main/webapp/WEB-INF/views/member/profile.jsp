@@ -33,7 +33,7 @@
 <%--        </c:forEach>--%>
     </div>
     <div>
-        <a href="update?id=${member.id}">수정</a>
+        <a href="update">수정</a>
         <button id="deleteBtn">삭제</button>
     </div>
 </main>

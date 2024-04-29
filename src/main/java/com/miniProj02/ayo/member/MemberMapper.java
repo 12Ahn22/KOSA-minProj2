@@ -8,4 +8,6 @@ public interface MemberMapper {
     int insert(MemberVO memberVO);
 
     MemberVO login(MemberVO build);
+
+    MemberVO view(MemberVO memberVO);
 }

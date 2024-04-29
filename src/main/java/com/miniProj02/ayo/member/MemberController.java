@@ -50,4 +50,10 @@ public class MemberController {
         log.info("=Profile=");
         return "member/profile";
     }
+
+    @GetMapping("update")
+    public String update(){
+        log.info("=Update Form=");
+        return "member/updateForm";
+    }
 }

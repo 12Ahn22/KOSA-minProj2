@@ -14,4 +14,11 @@
         from members
         where id = #{id}
     </select>
+
+    <select id="view" resultType="MemberVO">
+        select
+        id, name, birthdate, address, phone, gender, auth
+        from members
+        where id = #{id}
+    </select>
 </mapper>

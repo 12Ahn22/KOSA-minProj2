@@ -2,34 +2,31 @@
   Created by IntelliJ IDEA.
   User: COM
   Date: 2024-04-29
-  Time: 오후 1:59
+  Time: 오후 5:32
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<sec:authorize access="isAuthenticated()">
+    <sec:authentication property="principal" var="principal"/>
+</sec:authorize>
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
-    <title>RATTY | 회원 가입</title>
+    <title>RATTY | 회원 수정</title>
     <%@include file="../include/bootStrap.jsp" %>
 </head>
 <body>
 <jsp:include page="../include/header.jsp"/>
 <main class="container">
-    <h1>회원 가입</h1>
+    <h1>회원 정보 수정</h1>
+    <h2>${principal.id}</h2>
     <form id="uForm">
-        <input type="hidden" name="action" value="insert"/>
-        <div>
-            <label for="id">아이디:</label>
-            <input type="text" id="id" name="id" required>
-            <input type="button" id="duplicateId" value="중복확인">
-            <span id="duplicateMsg"></span>
-        </div>
         <div>
             <label for="name">이름:</label>
-            <input type="text" id="name" name="name" required>
+            <input type="text" id="name" name="name" value="${principal.name}" required>
         </div>
         <div>
             <label for="password">비밀번호:</label>
@@ -41,21 +38,23 @@
         </div>
         <div>
             <label for="phone">전화번호:</label>
-            <input type="tel" id="phone" name="phone" required>
+            <input type="tel" id="phone" name="phone" value="${principal.phone}" required>
         </div>
         <div>
             <label for="address">주소:</label>
-            <input type="text" id="address" name="address" required>
+            <input type="text" id="address" name="address" value="${principal.address}" required>
         </div>
         <div>
             <label for="birthdate">생년월일:</label>
-            <input type="date" id="birthdate" name="birthdate" required>
+            <input type="date" id="birthdate" name="birthdate" value="${principal.birthdate}" required>
         </div>
         <div>
             <label>성별:</label>
-            <input type="radio" id="female" name="gender" value="F" checked>
+            <input type="radio" id="female" name="gender" value="F" ${principal.gender.equals('F') ? 'checked'
+                    :''} disabled>
             <label for="female">여성</label>
-            <input type="radio" id="male" name="gender" value="M">
+            <input type="radio" id="male" name="gender" value="M" ${principal.gender.equals('F') ? '' :'checked'}
+                   disabled>
             <label for="male">남성</label>
         </div>
         <div>
@@ -66,30 +65,9 @@
             <%--                </c:forEach>--%>
         </div>
         <input class="btn btn-primary" type="submit" value="생성"/>
-        <a class="btn btn-secondary" href="member?action=list">취소</a>
+        <a class="btn btn-secondary" href="/member/profile">취소</a>
     </form>
 </main>
 <script type="text/javascript" src="/js/common.js"></script>
-<script>
-    const uForm = document.getElementById("uForm");
-    uForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-        console.log("=featch=")
-        fetch("insert", {
-            method: "POST",
-            body: formToSerialize("uForm"),
-            headers: {"Content-type": "application/json; charset=utf-8"}
-        }).then((res) => res.json())
-            .then((data) => {
-                if (data.status === 204) {
-                    alert("회원 가입에 성공했습니다.");
-                    // 페이지 리다이렉트
-                    // location = "list";
-                } else {
-                    alert(data.statusMessage);
-                }
-            });
-    })
-</script>
 </body>
 </html>
