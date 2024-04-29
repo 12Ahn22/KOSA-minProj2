@@ -7,4 +7,11 @@
         insert into members (id, name, password, birthdate, address, phone, gender)
         values (#{id}, #{name}, #{password}, #{birthdate}, #{address}, #{phone}, #{gender});
     </insert>
+
+    <select id="login" resultType="MemberVO">
+        select
+            id, name, password, birthdate, address, phone, gender, auth
+        from members
+        where id = #{id}
+    </select>
 </mapper>

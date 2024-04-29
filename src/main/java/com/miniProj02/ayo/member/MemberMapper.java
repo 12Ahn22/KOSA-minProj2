@@ -6,4 +6,6 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface MemberMapper {
     int insert(MemberVO memberVO);
+
+    MemberVO login(MemberVO build);
 }
