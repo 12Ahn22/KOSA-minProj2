@@ -10,4 +10,6 @@ public interface MemberMapper {
     MemberVO login(MemberVO build);
 
     MemberVO view(MemberVO memberVO);
+
+    int delete(MemberVO memberVO);
 }

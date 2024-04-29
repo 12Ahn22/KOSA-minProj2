@@ -74,7 +74,6 @@
     const uForm = document.getElementById("uForm");
     uForm.addEventListener("submit", (e) => {
         e.preventDefault();
-        console.log("=featch=")
         fetch("insert", {
             method: "POST",
             body: formToSerialize("uForm"),
@@ -84,7 +83,7 @@
                 if (data.status === 204) {
                     alert("회원 가입에 성공했습니다.");
                     // 페이지 리다이렉트
-                    // location = "list";
+                    location = "/";
                 } else {
                     alert(data.statusMessage);
                 }

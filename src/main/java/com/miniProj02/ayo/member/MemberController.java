@@ -1,6 +1,7 @@
 package com.miniProj02.ayo.member;
 
 import com.miniProj02.ayo.entity.MemberVO;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -40,7 +41,7 @@ public class MemberController {
             map.put("status", 204);
         } else {
             map.put("status", 404);
-            map.put("statusMessage", "게시글 삭제에 실패하였습니다");
+            map.put("statusMessage", "회원 가입에 실패했습니다.");
         }
         return map;
     }
@@ -55,5 +56,26 @@ public class MemberController {
     public String update(){
         log.info("=Update Form=");
         return "member/updateForm";
+    }
+
+    @PostMapping("delete")
+    @ResponseBody
+    public Map<String, Object> delete(@RequestBody MemberVO memberVO, HttpSession session){
+        log.info("=DELETE Member=");
+        log.info("=MemberVO = {}", memberVO);
+        Map<String, Object> map = new HashMap<>();
+
+        int updated = memberService.delete(memberVO);
+
+        if(updated == 1) { // 성공
+            map.put("status", 204);
+            // 세션에서 제거
+            session.invalidate();
+        } else {
+            map.put("status", 404);
+            map.put("statusMessage", "회원 탈퇴에 실패했습니다.");
+        }
+
+        return map;
     }
 }

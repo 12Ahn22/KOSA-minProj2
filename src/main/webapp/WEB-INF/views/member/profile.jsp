@@ -28,14 +28,37 @@
     <div><span>전화번호:</span><span>${principal.phone}</span></div>
     <div><span>주소:</span><span>${principal.address}</span></div>
     <div><span>취미:</span>
-<%--        <c:forEach var="hobby" items="${member.hobbies}">--%>
-<%--            <span>${hobby.hobby}</span>--%>
-<%--        </c:forEach>--%>
+        <%--        <c:forEach var="hobby" items="${member.hobbies}">--%>
+        <%--            <span>${hobby.hobby}</span>--%>
+        <%--        </c:forEach>--%>
     </div>
     <div>
-        <a href="update">수정</a>
-        <button id="deleteBtn">삭제</button>
+        <a href="update" class="btn btn-primary">수정</a>
+        <button id="deleteBtn" class="btn btn-secondary">삭제</button>
     </div>
 </main>
+<script>
+    const deleteBtn = document.getElementById("deleteBtn");
+    const memberId = document.getElementById("memberId").value;
+    console.log("memberId", memberId)
+    deleteBtn.addEventListener("click", () => {
+        fetch("delete", {
+            method: "POST",
+            body: JSON.stringify({
+                id: memberId
+            }),
+            headers: {"Content-type": "application/json; charset=utf-8"}
+        }).then((res) => res.json())
+            .then((data) => {
+                if (data.status === 204) {
+                    alert("회원 탈퇴에 성공했습니다.");
+                    // 페이지 리다이렉트
+                    location = "/";
+                } else {
+                    alert(data.statusMessage);
+                }
+            });
+    })
+</script>
 </body>
 </html>

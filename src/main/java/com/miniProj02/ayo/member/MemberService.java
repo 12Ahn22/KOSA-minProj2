@@ -26,6 +26,11 @@ public class MemberService implements UserDetailsService {
         return memberMapper.view(memberVO);
     }
 
+
+    public int delete(MemberVO memberVO) {
+        return memberMapper.delete(memberVO);
+    }
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         log.info("#### loadUserByUsername ####");

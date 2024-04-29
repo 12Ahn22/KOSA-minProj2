@@ -21,4 +21,8 @@
         from members
         where id = #{id}
     </select>
+
+    <delete id="delete" parameterType="MemberVO">
+        delete from members where id = #{id}
+    </delete>
 </mapper>
