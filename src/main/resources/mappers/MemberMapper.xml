@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.miniProj02.ayo.member.MemberMapper">
+    <insert id="insert" parameterType="MemberVO">
+        insert into members (id, name, password, birthdate, address, phone, gender)
+        values (#{id}, #{name}, #{password}, #{birthdate}, #{address}, #{phone}, #{gender});
+    </insert>
+</mapper>

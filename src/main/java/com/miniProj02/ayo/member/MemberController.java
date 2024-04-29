@@ -1,15 +1,20 @@
 package com.miniProj02.ayo.member;
 
+import com.miniProj02.ayo.entity.MemberVO;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Controller
 @RequestMapping("/member")
 @Slf4j
+@RequiredArgsConstructor
 public class MemberController {
+    private final MemberService memberService;
 
     @GetMapping("login")
     public String login(){
@@ -27,6 +32,16 @@ public class MemberController {
     @ResponseBody
     public Map<String, Object> insert(@RequestBody MemberVO memberVO){
         log.info("=Insert Member= {}", memberVO);
-        return null;
+        Map<String, Object> map = new HashMap<>();
+
+        int updated = memberService.insert(memberVO);
+
+        if(updated == 1) { // 성공
+            map.put("status", 204);
+        } else {
+            map.put("status", 404);
+            map.put("statusMessage", "게시글 삭제에 실패하였습니다");
+        }
+        return map;
     }
 }
