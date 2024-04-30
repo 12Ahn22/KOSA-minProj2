@@ -20,7 +20,6 @@
 <main class="container">
     <h1>회원 가입</h1>
     <form id="uForm">
-        <input type="hidden" name="action" value="insert"/>
         <div>
             <label for="id">아이디:</label>
             <input type="text" id="id" name="id" required>
@@ -80,12 +79,13 @@
             headers: {"Content-type": "application/json; charset=utf-8"}
         }).then((res) => res.json())
             .then((data) => {
+                console.log("data" , data);
                 if (data.status === 204) {
                     alert("회원 가입에 성공했습니다.");
                     // 페이지 리다이렉트
-                    location = "/";
+                    location = "/member/login";
                 } else {
-                    alert(data.statusMessage);
+                    alert("회원 가입에 실패했습니다.");
                 }
             });
     })

@@ -75,7 +75,6 @@ public class MemberController {
             map.put("status", 404);
             map.put("statusMessage", "회원 탈퇴에 실패했습니다.");
         }
-
         return map;
     }
 }
