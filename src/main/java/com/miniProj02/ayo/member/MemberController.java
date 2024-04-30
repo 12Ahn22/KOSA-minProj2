@@ -51,7 +51,7 @@ public class MemberController {
     @GetMapping("profile")
     public String profile(Authentication authentication, Model model){
         log.info("=Profile=");
-        MemberVO memberVO = (MemberVO) authentication.getPrincipal();
+        MemberVO memberVO = memberService.view((MemberVO) authentication.getPrincipal());
         model.addAttribute("member", memberVO);
         return "member/profile";
     }
@@ -59,7 +59,7 @@ public class MemberController {
     @GetMapping("update")
     public String update(Authentication authentication, Model model){
         log.info("=Update Form=");
-        MemberVO memberVO = (MemberVO) authentication.getPrincipal();
+        MemberVO memberVO = memberService.view((MemberVO) authentication.getPrincipal());
         model.addAttribute("member", memberVO);
         return "member/updateForm";
     }
