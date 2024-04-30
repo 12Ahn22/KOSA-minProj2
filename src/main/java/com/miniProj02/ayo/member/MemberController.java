@@ -4,7 +4,9 @@ import com.miniProj02.ayo.entity.MemberVO;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -47,14 +49,18 @@ public class MemberController {
     }
 
     @GetMapping("profile")
-    public String profile(){
+    public String profile(Authentication authentication, Model model){
         log.info("=Profile=");
+        MemberVO memberVO = (MemberVO) authentication.getPrincipal();
+        model.addAttribute("member", memberVO);
         return "member/profile";
     }
 
     @GetMapping("update")
-    public String update(){
+    public String update(Authentication authentication, Model model){
         log.info("=Update Form=");
+        MemberVO memberVO = (MemberVO) authentication.getPrincipal();
+        model.addAttribute("member", memberVO);
         return "member/updateForm";
     }
 

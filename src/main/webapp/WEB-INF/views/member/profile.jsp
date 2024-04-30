@@ -8,9 +8,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
-<sec:authorize access="isAuthenticated()">
-    <sec:authentication property="principal" var="principal"/>
-</sec:authorize>
 <!DOCTYPE html>
 <html>
 <head>
@@ -21,12 +18,12 @@
 <body>
 <%@include file="../include/header.jsp" %>
 <main class="container">
-    <input type="hidden" id="memberId" value="${principal.id}"/>
-    <h1>${principal.id}</h1>
-    <div><span>이름:</span><span>${principal.name}</span></div>
-    <div><span>성별:</span><span>${principal.gender}</span></div>
-    <div><span>전화번호:</span><span>${principal.phone}</span></div>
-    <div><span>주소:</span><span>${principal.address}</span></div>
+    <input type="hidden" id="memberId" value="${member.id}"/>
+    <h1>${member.id}</h1>
+    <div><span>이름:</span><span>${member.name}</span></div>
+    <div><span>성별:</span><span>${member.gender}</span></div>
+    <div><span>전화번호:</span><span>${member.phone}</span></div>
+    <div><span>주소:</span><span>${member.address}</span></div>
     <div><span>취미:</span>
         <%--        <c:forEach var="hobby" items="${member.hobbies}">--%>
         <%--            <span>${hobby.hobby}</span>--%>

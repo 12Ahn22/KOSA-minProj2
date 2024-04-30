@@ -8,9 +8,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
-<sec:authorize access="isAuthenticated()">
-    <sec:authentication property="principal" var="principal"/>
-</sec:authorize>
 <!DOCTYPE html>
 <html>
 <head>
@@ -22,11 +19,11 @@
 <jsp:include page="../include/header.jsp"/>
 <main class="container">
     <h1>회원 정보 수정</h1>
-    <h2>${principal.id}</h2>
+    <h2>${member.id}</h2>
     <form id="uForm">
         <div>
             <label for="name">이름:</label>
-            <input type="text" id="name" name="name" value="${principal.name}" required>
+            <input type="text" id="name" name="name" value="${member.name}" required>
         </div>
         <div>
             <label for="password">비밀번호:</label>
@@ -38,22 +35,22 @@
         </div>
         <div>
             <label for="phone">전화번호:</label>
-            <input type="tel" id="phone" name="phone" value="${principal.phone}" required>
+            <input type="tel" id="phone" name="phone" value="${member.phone}" required>
         </div>
         <div>
             <label for="address">주소:</label>
-            <input type="text" id="address" name="address" value="${principal.address}" required>
+            <input type="text" id="address" name="address" value="${member.address}" required>
         </div>
         <div>
             <label for="birthdate">생년월일:</label>
-            <input type="date" id="birthdate" name="birthdate" value="${principal.birthdate}" required>
+            <input type="date" id="birthdate" name="birthdate" value="${member.birthdate}" required>
         </div>
         <div>
             <label>성별:</label>
-            <input type="radio" id="female" name="gender" value="F" ${principal.gender.equals('F') ? 'checked'
+            <input type="radio" id="female" name="gender" value="F" ${member.gender.equals('F') ? 'checked'
                     :''} disabled>
             <label for="female">여성</label>
-            <input type="radio" id="male" name="gender" value="M" ${principal.gender.equals('F') ? '' :'checked'}
+            <input type="radio" id="male" name="gender" value="M" ${member.gender.equals('F') ? '' :'checked'}
                    disabled>
             <label for="male">남성</label>
         </div>
@@ -64,10 +61,13 @@
             <%--                    <label for="${hobby.id}">${hobby.hobby}</label>--%>
             <%--                </c:forEach>--%>
         </div>
-        <input class="btn btn-primary" type="submit" value="생성"/>
+        <input class="btn btn-primary" type="submit" value="수정"/>
         <a class="btn btn-secondary" href="/member/profile">취소</a>
     </form>
 </main>
 <script type="text/javascript" src="/js/common.js"></script>
+<script>
+
+</script>
 </body>
 </html>
