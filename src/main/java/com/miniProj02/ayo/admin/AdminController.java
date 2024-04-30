@@ -28,10 +28,8 @@ public class AdminController {
     @GetMapping("list")
     public String list(@Valid PageRequestVO pageRequestVO, BindingResult bindingResult, Model model){
         log.info("=admin/list=");
-
         PageResponseVO<MemberVO> pageResponseVO = memberService.list(pageRequestVO);
         List<CodeVO> codeList = codeService.getList();
-        log.info("codeList =>{}", codeList);
 
         model.addAttribute("pageResponseVO", pageResponseVO);
         model.addAttribute("sizes", codeList);

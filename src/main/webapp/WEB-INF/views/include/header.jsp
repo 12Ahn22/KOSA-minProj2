@@ -17,7 +17,6 @@
     <nav>
         <ul class="nav nav-pills">
             <li class="nav-item"><a class="nav-link" href="/intro">회사소개</a></li>
-
             <c:choose>
                 <%--비 로그인 상태--%>
                 <c:when test="${empty principal}">

@@ -30,7 +30,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authorize) -> authorize
                         .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.ERROR).permitAll() // 이걸 해야 JSP 페이지를 포워딩 가능
                         .requestMatchers("/", "/images/**", "js/**", "/WEB-INF/**", "/intro", "/member/insertForm", "/member/loginForm**", "/member/insert", "/member/login", "/member/duplicate").permitAll()
-                        .anyRequest().authenticated())
+                        .requestMatchers("/admin/*").hasRole("ADMIN")
+                        .anyRequest().authenticated()
+                ).exceptionHandling(exceptionHandling -> exceptionHandling
+                        .accessDeniedHandler((request, response, authException) -> response.sendRedirect("/"))
+                        .authenticationEntryPoint((request, response, authException) -> response.sendRedirect("/"))) // 로그인&권한 없는 경우 리다이렉팅
                 .userDetailsService(memberService)
                 .formLogin(form -> form
                         .loginPage("/member/login")
@@ -41,7 +45,7 @@ public class SecurityConfig {
                         .defaultSuccessUrl("/")
                         .successHandler(authSucessHandler)
                         .failureHandler(authFailureHandler))
-                .logout((logoutConfig)->logoutConfig
+                .logout((logoutConfig) -> logoutConfig
                         .logoutRequestMatcher(new AntPathRequestMatcher("/member/logout"))
                         .logoutSuccessUrl("/")
                         .invalidateHttpSession(true)

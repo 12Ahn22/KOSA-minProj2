@@ -1,11 +1,10 @@
 <%--
   Created by IntelliJ IDEA.
-  User: An
-  Date: 2024-04-30
-  Time: 오후 7:32
+  User: COM
+  Date: 2024-04-29
+  Time: 오후 5:28
   To change this template use File | Settings | File Templates.
 --%>
-
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
@@ -13,11 +12,11 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>RATTY | 회원 가입</title>
+    <title>RATTY | 회원 리스트</title>
     <%@include file="../include/bootStrap.jsp" %>
 </head>
 <body>
-<jsp:include page="../include/header.jsp"/>
+<%@include file="../include/header.jsp" %>
 <main class="container">
     <h1>회원 리스트</h1>
     <%--검색 폼--%>
