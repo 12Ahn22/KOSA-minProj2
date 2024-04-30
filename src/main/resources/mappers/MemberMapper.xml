@@ -18,14 +18,14 @@
 
     <select id="login" resultType="MemberVO">
         select
-            id, name, password, birthdate, address, phone, gender, auth
+            id, name, password, birthdate, address, phone, gender, auth, account_locked
         from members
         where id = #{id}
     </select>
 
     <select id="view" resultType="MemberVO">
         select
-        id, name, birthdate, address, phone, gender, auth
+        id, name, birthdate, address, phone, gender, auth, account_locked
         from members
         where id = #{id}
     </select>
@@ -48,7 +48,7 @@
     </select>
 
     <select id="getList" resultType="MemberVO">
-        select id, name, address, phone, gender, birthdate, auth from members
+        select id, name, address, phone, gender, birthdate, auth, account_locked from members
         <include refid="search"/>
         limit #{skip}, #{size}
     </select>

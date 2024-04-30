@@ -55,7 +55,7 @@
                 <td>${member.gender}</td>
                 <td>${member.phone}</td>
                 <td>${member.getAuthName()}</td>
-                <td>${member.auth}</td>
+                <td>${member.account_locked}</td>
             </tr>
         </c:forEach>
         </tbody>

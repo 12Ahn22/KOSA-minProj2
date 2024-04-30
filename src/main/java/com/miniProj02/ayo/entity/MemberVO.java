@@ -25,6 +25,7 @@ public class MemberVO  implements UserDetails {
     private String phone;
     private String gender;
     private int auth;
+    private String account_locked; // 계정 잠금 여부
 
     public MemberVO hashPassword(PasswordEncoder passwordEncoder){
         this.password = passwordEncoder.encode(this.password);
@@ -62,7 +63,8 @@ public class MemberVO  implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        // true = "N" , false ="Y"
+        return account_locked.equals("N");
     }
 
     @Override
