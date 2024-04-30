@@ -64,6 +64,24 @@ public class MemberController {
         return "member/updateForm";
     }
 
+    @PostMapping("update")
+    @ResponseBody
+    public Map<String, Object> update(@RequestBody MemberVO memberVO){
+        log.info("=UPDATE Member=");
+        log.info("=MemberVO = {}", memberVO);
+        Map<String,Object> map = new HashMap<>();
+
+        int updated = memberService.update(memberVO);
+
+        if(updated == 1) { // 성공
+            map.put("status", 204);
+        } else {
+            map.put("status", 404);
+            map.put("statusMessage", "회원 수정에 실패했습니다.");
+        }
+        return map;
+    }
+
     @PostMapping("delete")
     @ResponseBody
     public Map<String, Object> delete(@RequestBody MemberVO memberVO, HttpSession session){

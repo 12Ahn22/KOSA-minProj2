@@ -21,6 +21,7 @@
     <h1>회원 정보 수정</h1>
     <h2>${member.id}</h2>
     <form id="uForm">
+        <input value="${member.id}" name="id" type="hidden"/>
         <div>
             <label for="name">이름:</label>
             <input type="text" id="name" name="name" value="${member.name}" required>
@@ -67,7 +68,25 @@
 </main>
 <script type="text/javascript" src="/js/common.js"></script>
 <script>
-
+    const uForm = document.getElementById("uForm");
+    uForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        fetch("update", {
+            method: "POST",
+            body: formToSerialize("uForm"),
+            headers: {"Content-type": "application/json; charset=utf-8"}
+        }).then((res) => res.json())
+            .then((data) => {
+                console.log("data" , data);
+                if (data.status === 204) {
+                    alert("회원 정보 수정에 성공했습니다.");
+                    // 페이지 리다이렉트
+                    location = "/member/profile";
+                } else {
+                    alert("회원 정보 수정에 실패했습니다.");
+                }
+            });
+    })
 </script>
 </body>
 </html>

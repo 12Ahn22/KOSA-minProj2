@@ -12,4 +12,6 @@ public interface MemberMapper {
     MemberVO view(MemberVO memberVO);
 
     int delete(MemberVO memberVO);
+
+    int update(MemberVO memberVO);
 }

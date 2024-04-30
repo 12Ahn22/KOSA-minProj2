@@ -25,4 +25,10 @@
     <delete id="delete" parameterType="MemberVO">
         delete from members where id = #{id}
     </delete>
+
+    <update id="update" parameterType="MemberVO">
+        update members
+        set name = #{name}, password = #{password}, address = #{address}, phone = #{phone} ,birthdate = #{birthdate}
+        where id = #{id}
+    </update>
 </mapper>

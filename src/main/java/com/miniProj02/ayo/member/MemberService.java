@@ -30,6 +30,10 @@ public class MemberService implements UserDetailsService {
     public int delete(MemberVO memberVO) {
         return memberMapper.delete(memberVO);
     }
+    public int update(MemberVO memberVO) {
+        memberVO.hashPassword(bCryptPasswordEncoder);
+        return memberMapper.update(memberVO);
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -44,5 +48,6 @@ public class MemberService implements UserDetailsService {
         log.info("resultVO = {}", resultVO);
         return resultVO;
     }
+
 
 }
