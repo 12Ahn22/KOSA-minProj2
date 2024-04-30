@@ -1,6 +1,8 @@
 package com.miniProj02.ayo.member;
 
 import com.miniProj02.ayo.entity.MemberVO;
+import com.miniProj02.ayo.entity.PageRequestVO;
+import com.miniProj02.ayo.entity.PageResponseVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,6 +11,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -17,6 +20,7 @@ import java.util.Map;
 public class MemberService implements UserDetailsService {
     private final MemberMapper memberMapper;
     private final PasswordEncoder bCryptPasswordEncoder;
+
     public int insert(MemberVO memberVO) {
         memberVO.hashPassword(bCryptPasswordEncoder);
         return memberMapper.insert(memberVO);
@@ -30,6 +34,7 @@ public class MemberService implements UserDetailsService {
     public int delete(MemberVO memberVO) {
         return memberMapper.delete(memberVO);
     }
+
     public int update(MemberVO memberVO) {
         memberVO.hashPassword(bCryptPasswordEncoder);
         return memberMapper.update(memberVO);
@@ -41,7 +46,7 @@ public class MemberService implements UserDetailsService {
         MemberVO memberVO = MemberVO.builder().id(username).build();
         log.info("MemberVO = {}", memberVO);
         MemberVO resultVO = memberMapper.login(memberVO);
-        if(resultVO == null) {
+        if (resultVO == null) {
             log.info("사용자가 존재하지 않습니다.");
             throw new UsernameNotFoundException(username + " 사용자가 존재하지 않습니다");
         }
@@ -50,4 +55,19 @@ public class MemberService implements UserDetailsService {
     }
 
 
+    public PageResponseVO<MemberVO> list(PageRequestVO pageRequestVO) {
+        log.info("=Member List=");
+        List<MemberVO> list = null;
+        PageResponseVO<MemberVO> pageResponseVO = null;
+        int total = 0;
+        list = memberMapper.getList(pageRequestVO);
+        total = memberMapper.getTotalCount(pageRequestVO);
+
+        log.info("list {}", list);
+        log.info("total {}", total);
+        pageResponseVO =
+                new PageResponseVO<MemberVO>(list, total, pageRequestVO.getPageNo(), pageRequestVO.getSize());
+
+        return pageResponseVO;
+    }
 }

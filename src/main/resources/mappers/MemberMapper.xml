@@ -3,6 +3,14 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.miniProj02.ayo.member.MemberMapper">
+    <sql id="search">
+        <where>
+            <if test="searchKey != null and searchKey != ''">
+                id like concat('%', #{searchKey}, '%')
+            </if>
+        </where>
+    </sql>
+
     <insert id="insert" parameterType="MemberVO">
         insert into members (id, name, password, birthdate, address, phone, gender)
         values (#{id}, #{name}, #{password}, #{birthdate}, #{address}, #{phone}, #{gender});
@@ -31,4 +39,17 @@
         set name = #{name}, password = #{password}, address = #{address}, phone = #{phone} ,birthdate = #{birthdate}
         where id = #{id}
     </update>
+
+    <select id="getTotalCount">
+        select
+        count(*)
+        from members
+        <include refid="search"/>
+    </select>
+
+    <select id="getList" resultType="MemberVO">
+        select id, name, address, phone, gender, birthdate from members
+        <include refid="search"/>
+        limit #{skip}, #{size}
+    </select>
 </mapper>

@@ -30,7 +30,7 @@
                     <li class="nav-item"><a class="nav-link" href="/member/profile">마이페이지</a></li>
                     <%--관리자 상태일 때--%>
                     <sec:authorize access="hasRole('ROLE_ADMIN')">
-                        <li class="nav-item"><a class="nav-link" href="/member/list">회원관리</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/admin/list">회원관리</a></li>
                     </sec:authorize>
                 </c:otherwise>
             </c:choose>

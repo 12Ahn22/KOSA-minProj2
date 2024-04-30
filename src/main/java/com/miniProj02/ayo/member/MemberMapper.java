@@ -1,7 +1,10 @@
 package com.miniProj02.ayo.member;
 
 import com.miniProj02.ayo.entity.MemberVO;
+import com.miniProj02.ayo.entity.PageRequestVO;
 import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
 
 @Mapper
 public interface MemberMapper {
@@ -14,4 +17,8 @@ public interface MemberMapper {
     int delete(MemberVO memberVO);
 
     int update(MemberVO memberVO);
+
+    List<MemberVO> getList(PageRequestVO pageRequestVO);
+
+    int getTotalCount(PageRequestVO pageRequestVO);
 }
