@@ -31,6 +31,13 @@ public class MemberVO  implements UserDetails {
         return this;
     }
 
+    public String getAuthName(){
+        return switch (this.auth){
+            case 1 -> "ADMIN";
+            default -> "USER";
+        };
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<GrantedAuthority> collections = new ArrayList<>();

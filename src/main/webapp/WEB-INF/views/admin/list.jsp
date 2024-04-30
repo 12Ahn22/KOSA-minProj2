@@ -43,7 +43,8 @@
             <th scope="col">이름</th>
             <th scope="col">성별</th>
             <th scope="col">휴대번호</th>
-            <th scope="col">주소</th>
+            <th scope="col">권한</th>
+            <th scope="col">계정 잠금</th>
         </tr>
         </thead>
         <tbody>
@@ -53,7 +54,8 @@
                 <td>${member.name}</td>
                 <td>${member.gender}</td>
                 <td>${member.phone}</td>
-                <td>${member.address}</td>
+                <td>${member.getAuthName()}</td>
+                <td>${member.auth}</td>
             </tr>
         </c:forEach>
         </tbody>

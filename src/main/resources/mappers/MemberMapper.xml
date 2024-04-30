@@ -48,7 +48,7 @@
     </select>
 
     <select id="getList" resultType="MemberVO">
-        select id, name, address, phone, gender, birthdate from members
+        select id, name, address, phone, gender, birthdate, auth from members
         <include refid="search"/>
         limit #{skip}, #{size}
     </select>
