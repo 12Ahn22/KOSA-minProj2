@@ -2,6 +2,9 @@
          pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+    <sec:authorize access="isAuthenticated()">
+        <sec:authentication property="principal" var="principal"/>
+    </sec:authorize>
     <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
         <svg xmlns="http://www.w3.org/2000/svg" width="40" height="32" class="bi me-2" viewBox="0 0 1024 1024">
             <path fill="#85C3DE"
@@ -14,11 +17,23 @@
     <nav>
         <ul class="nav nav-pills">
             <li class="nav-item"><a class="nav-link" href="/intro">회사소개</a></li>
-            <li class="nav-item"><a class="nav-link" href="/member/insert">회원가입</a></li>
-            <li class="nav-item"><a class="nav-link" href="/member/login">로그인</a></li>
-            <li class="nav-item"><a class="nav-link" href="/member/list">회원관리</a></li>
-            <li class="nav-item"><a class="nav-link" href="/member/logout">로그아웃</a></li>
-            <li class="nav-item"><a class="nav-link" href="/member/profile">마이페이지</a></li>
+
+            <c:choose>
+                <%--비 로그인 상태--%>
+                <c:when test="${empty principal}">
+                    <li class="nav-item"><a class="nav-link" href="/member/insert">회원가입</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/member/login">로그인</a></li>
+                </c:when>
+                <c:otherwise>
+                    <%--로그인 상태일 때,--%>
+                    <li class="nav-item"><a class="nav-link" href="/member/logout">로그아웃</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/member/profile">마이페이지</a></li>
+                    <%--관리자 상태일 때--%>
+                    <sec:authorize access="hasRole('ROLE_ADMIN')">
+                        <li class="nav-item"><a class="nav-link" href="/member/list">회원관리</a></li>
+                    </sec:authorize>
+                </c:otherwise>
+            </c:choose>
             <li class="nav-item"><a class="nav-link" href="/board/list">게시판</a></li>
         </ul>
     </nav>
