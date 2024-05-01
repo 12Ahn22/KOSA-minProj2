@@ -40,7 +40,7 @@
     const deleteBtn = document.getElementById("deleteBtn");
     const memberId = document.getElementById("memberId").value;
     deleteBtn.addEventListener("click", () => {
-        fetch("/auth/delete", {
+        fetch("/admin/delete", {
             method: "POST",
             body: JSON.stringify({
                 id: memberId
