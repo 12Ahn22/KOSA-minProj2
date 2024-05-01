@@ -56,15 +56,12 @@ public class MemberService implements UserDetailsService {
 
 
     public PageResponseVO<MemberVO> list(PageRequestVO pageRequestVO) {
-        log.info("=Member List=");
         List<MemberVO> list = null;
         PageResponseVO<MemberVO> pageResponseVO = null;
         int total = 0;
         list = memberMapper.getList(pageRequestVO);
         total = memberMapper.getTotalCount(pageRequestVO);
 
-        log.info("list {}", list);
-        log.info("total {}", total);
         pageResponseVO =
                 new PageResponseVO<MemberVO>(list, total, pageRequestVO.getPageNo(), pageRequestVO.getSize());
 
@@ -72,10 +69,13 @@ public class MemberService implements UserDetailsService {
     }
 
     public int adminUpdate(MemberVO memberVO) {
-        memberVO.hashPassword(bCryptPasswordEncoder);
+        log.info("MemberVO 수정전 -> {}", memberVO);
+        if(!memberVO.getPassword().equals("") && memberVO.getPassword() != null) memberVO.hashPassword(bCryptPasswordEncoder);
         // 계정 잠금 값이 = null이면, "N"값
         if(memberVO.getAccount_locked() == null) memberVO.setAccount_locked("N");
         // 권한 검사 (일단 보류)
+
+        log.info("MemberVO 수정후 -> {}", memberVO);
         return memberMapper.adminUpdate(memberVO);
     }
 }
