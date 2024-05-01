@@ -102,8 +102,9 @@
         e.preventDefault();
 
         // 유효성 검사
-        validateSamePassword(password, password2);
-        validatePhoneNumber(phone);
+        if(!validateSamePassword(password, password2)) return;
+        if(!validatePhoneNumber(phone)) return;
+
         if(!isDuplicated){
             alert("계정 중복 체크를 해주세요.");
             return;
