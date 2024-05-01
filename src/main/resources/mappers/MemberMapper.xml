@@ -25,7 +25,7 @@
 
     <select id="view" resultType="MemberVO">
         select
-        id, name, birthdate, address, phone, gender, auth, account_locked
+            id, name, password, birthdate, address, phone, gender, auth, account_locked
         from members
         where id = #{id}
     </select>

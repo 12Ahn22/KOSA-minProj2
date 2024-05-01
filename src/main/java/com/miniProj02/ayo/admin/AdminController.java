@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -34,5 +35,13 @@ public class AdminController {
         model.addAttribute("pageResponseVO", pageResponseVO);
         model.addAttribute("sizes", codeList);
         return "admin/list";
+    }
+
+    @GetMapping("view")
+    public String view(@RequestParam String id, Model model){
+        log.info("=admin/view id:{}=", id);
+        MemberVO memberVO = memberService.view(MemberVO.builder().id(id).build());
+        model.addAttribute("member", memberVO);
+        return "admin/view";
     }
 }
