@@ -23,4 +23,6 @@ public interface MemberMapper {
     int getTotalCount(PageRequestVO pageRequestVO);
 
     int adminUpdate(MemberVO memberVO);
+
+    int updateAccountLock(MemberVO memberVO);
 }

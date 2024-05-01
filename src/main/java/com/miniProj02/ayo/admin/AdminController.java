@@ -75,6 +75,23 @@ public class AdminController {
         return map;
     }
 
+    @PostMapping("updateAccountLock")
+    @ResponseBody
+    public Map<String, Object> updateAccountLock(@RequestBody MemberVO memberVO){
+        log.info("=amdin/updateAccountLock");
+        Map<String,Object> map = new HashMap<>();
+
+        int updated = memberService.updateAccountLock(memberVO);
+
+        if(updated == 1) { // 성공
+            map.put("status", 204);
+        } else {
+            map.put("status", 404);
+            map.put("statusMessage", "회원 잠금에 실패했습니다.");
+        }
+        return map;
+    }
+
     @PostMapping("delete")
     @ResponseBody
     public Map<String, Object> delete(@RequestBody MemberVO memberVO, HttpSession session){

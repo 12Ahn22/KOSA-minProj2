@@ -54,6 +54,12 @@
         where id = #{id}
     </update>
 
+    <update id="updateAccountLock" parameterType="MemberVO">
+        update members
+        set account_locked = #{account_locked}
+        where id = #{id}
+    </update>
+
     <select id="getTotalCount">
         select
         count(*)

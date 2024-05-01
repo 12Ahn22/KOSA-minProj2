@@ -78,4 +78,8 @@ public class MemberService implements UserDetailsService {
         log.info("MemberVO 수정후 -> {}", memberVO);
         return memberMapper.adminUpdate(memberVO);
     }
+
+    public int updateAccountLock(MemberVO memberVO) {
+        return memberMapper.updateAccountLock(memberVO);
+    }
 }

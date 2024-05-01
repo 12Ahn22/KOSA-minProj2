@@ -50,7 +50,7 @@
             <th scope="col"></th>
         </tr>
         </thead>
-        <tbody>
+        <tbody id="table">
         <c:forEach var="member" items="${pageResponseVO.list}">
             <tr>
                 <td><a href="view?id=${member.id}">${member.id}</a></td>
@@ -58,8 +58,8 @@
                 <td>${member.gender}</td>
                 <td>${member.phone}</td>
                 <td>${member.getAuthName()}</td>
-                <td>${member.account_locked} <input type="checkbox" id="account_locked" name="account_locked"
-                                                    value="Y" ${member.account_locked == 'Y' ? 'checked' : ''}/></td>
+                <td><input type="checkbox" name="account_locked"
+                                                    value="${member.id}" ${member.account_locked == 'Y' ? 'checked' : ''}/></td>
                 <td><button id="delete-btn" class="btn btn-danger">계정 삭제</button></td>
             </tr>
         </c:forEach>
@@ -117,6 +117,30 @@
 
     document.getElementById("lockCheck").addEventListener('change',(e)=>{
         searchForm.submit();
+    })
+
+    document.getElementById("table").addEventListener("change",(e)=>{
+        if(e.target.name === "account_locked"){
+            // 계정 잠금 요청 보내기
+            const id = e.target.value;
+            const checked = e.target.checked;
+            fetch("updateAccountLock", {
+                method: "POST",
+                body: JSON.stringify({
+                    id,
+                    account_locked: checked ? 'Y' : 'N'
+                }),
+                headers: {"Content-type": "application/json; charset=utf-8"}
+            }).then((res) => res.json())
+                .then((data) => {
+                    if (data.status === 204) {
+                        alert("회원 잠금 변경에 성공했습니다.");
+                    } else {
+                        alert("회원 잠금 변경에 실패했습니다.");
+                    }
+                });
+
+        }
     })
 
     const url = new URL(window.location.href);
