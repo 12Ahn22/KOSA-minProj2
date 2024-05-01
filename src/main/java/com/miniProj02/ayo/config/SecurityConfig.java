@@ -33,7 +33,8 @@ public class SecurityConfig {
                 )
                 .exceptionHandling(exceptionHandling -> exceptionHandling
                         .accessDeniedHandler((request, response, authException) -> response.sendRedirect("/"))
-                        .authenticationEntryPoint((request, response, authException) -> response.sendRedirect("/"))) // 로그인&권한 없는 경우 리다이렉팅
+//                        .authenticationEntryPoint((request, response, authException) -> response.sendRedirect("/"))
+                ) // 로그인&권한 없는 경우 리다이렉팅
                 .formLogin(form -> form
                         .loginPage("/member/loginForm")
                         .permitAll()
