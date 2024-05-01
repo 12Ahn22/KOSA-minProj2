@@ -36,8 +36,16 @@ public class MemberService implements UserDetailsService {
     }
 
     public int update(MemberVO memberVO) {
-        memberVO.hashPassword(bCryptPasswordEncoder);
+        if(!memberVO.getPassword().equals("") && memberVO.getPassword() != null) memberVO.hashPassword(bCryptPasswordEncoder);
         return memberMapper.update(memberVO);
+    }
+
+    public int adminUpdate(MemberVO memberVO) {
+        if(!memberVO.getPassword().equals("") && memberVO.getPassword() != null) memberVO.hashPassword(bCryptPasswordEncoder);
+        // 계정 잠금 값이 = null이면, "N"값
+        if(memberVO.getAccount_locked() == null) memberVO.setAccount_locked("N");
+        // 권한 검사 (일단 보류)
+        return memberMapper.adminUpdate(memberVO);
     }
 
     @Override
@@ -66,17 +74,6 @@ public class MemberService implements UserDetailsService {
                 new PageResponseVO<MemberVO>(list, total, pageRequestVO.getPageNo(), pageRequestVO.getSize());
 
         return pageResponseVO;
-    }
-
-    public int adminUpdate(MemberVO memberVO) {
-        log.info("MemberVO 수정전 -> {}", memberVO);
-        if(!memberVO.getPassword().equals("") && memberVO.getPassword() != null) memberVO.hashPassword(bCryptPasswordEncoder);
-        // 계정 잠금 값이 = null이면, "N"값
-        if(memberVO.getAccount_locked() == null) memberVO.setAccount_locked("N");
-        // 권한 검사 (일단 보류)
-
-        log.info("MemberVO 수정후 -> {}", memberVO);
-        return memberMapper.adminUpdate(memberVO);
     }
 
     public int updateAccountLock(MemberVO memberVO) {

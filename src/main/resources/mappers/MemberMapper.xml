@@ -43,7 +43,8 @@
 
     <update id="update" parameterType="MemberVO">
         update members
-        set name = #{name}, password = #{password}, address = #{address}, phone = #{phone} ,birthdate = #{birthdate}
+        set name = #{name}, address = #{address}, phone = #{phone} ,birthdate = #{birthdate}
+        <if test="password != null and !password.equals('')">, password = #{password}</if>
         where id = #{id}
     </update>
 

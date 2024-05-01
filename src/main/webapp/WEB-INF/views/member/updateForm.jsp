@@ -28,11 +28,11 @@
         </div>
         <div>
             <label for="password">비밀번호:</label>
-            <input type="password" id="password" name="password" required autocomplete="off">
+            <input type="password" id="password" name="password" autocomplete="off">
             <br/>
             <label for="password2">비밀번호확인:</label>
             <!-- 서버로 보내지 않을 내용은 name을 써주지않는다. -->
-            <input type="password" id="password2" required autocomplete="off">
+            <input type="password" id="password2" autocomplete="off">
         </div>
         <div>
             <label for="phone">전화번호:</label>
