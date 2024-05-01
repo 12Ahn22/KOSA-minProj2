@@ -32,6 +32,8 @@ public class PageRequestVO {
 
     private String searchKey;
 
+    private boolean lockCheck;
+
     public int getSkip(){
         return (pageNo - 1) * 10;
     }

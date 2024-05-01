@@ -6,7 +6,14 @@
     <sql id="search">
         <where>
             <if test="searchKey != null and searchKey != ''">
+                (
                 id like concat('%', #{searchKey}, '%')
+                OR name LIKE CONCAT('%', #{searchKey}, '%')
+                OR phone LIKE CONCAT('%', #{searchKey}, '%')
+                )
+            </if>
+            <if test="lockCheck != false">
+                AND account_locked = 'Y'
             </if>
         </where>
     </sql>

@@ -32,6 +32,8 @@
                 id="searchKey"
                 placeholder="Search..."
         />
+        <label for="lockCheck">계정 잠금 여부 체크:</label><input type="checkbox" id="lockCheck" name="lockCheck"
+        ${param.lockCheck.equals("on") ? 'checked':''}/>
         <input type="submit" value="검색"/>
     </form>
 
@@ -101,12 +103,17 @@
             const num = target.dataset['num'];
             const size = document.getElementById("size").value;
             const searchKey = document.getElementById("searchKey").value;
-            location = `?pageNo=\${num}&size=\${size}&searchKey=\${searchKey}`;
+            const lockCheck = document.getElementById("lockCheck").value;
+            location = `?pageNo=\${num}&size=\${size}&searchKey=\${searchKey}&lockCheck=\${lockCheck}`;
         });
 
     document.querySelector('#size').addEventListener('change', (e) => {
         searchForm.submit();
     });
+
+    document.getElementById("lockCheck").addEventListener('change',(e)=>{
+        searchForm.submit();
+    })
 
     const url = new URL(window.location.href);
     const urlParams = url.searchParams;
