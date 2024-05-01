@@ -20,26 +20,28 @@ public class MemberController {
     private final MemberService memberService;
 
     @GetMapping("login")
-    public String login(){
+    public String login(@RequestParam(required = false) String error, @RequestParam(required = false) String exception, Model model) {
         log.info("=Login=");
+        model.addAttribute("error", error);
+        model.addAttribute("exception", exception);
         return "member/loginForm";
     }
 
     @GetMapping("insert")
-    public String insert(){
+    public String insert() {
         log.info("=Member Insert Form=");
         return "member/insertForm";
     }
 
     @PostMapping("insert")
     @ResponseBody
-    public Map<String, Object> insert(@RequestBody MemberVO memberVO){
+    public Map<String, Object> insert(@RequestBody MemberVO memberVO) {
         log.info("=Insert Member= {}", memberVO);
         Map<String, Object> map = new HashMap<>();
 
         int updated = memberService.insert(memberVO);
         // 이 아래를 한번에 처리 하는 방법이 없으려나?
-        if(updated == 1) { // 성공
+        if (updated == 1) { // 성공
             map.put("status", 204);
         } else {
             map.put("status", 404);
@@ -49,7 +51,7 @@ public class MemberController {
     }
 
     @GetMapping("profile")
-    public String profile(Authentication authentication, Model model){
+    public String profile(Authentication authentication, Model model) {
         log.info("=Profile=");
         MemberVO memberVO = memberService.view((MemberVO) authentication.getPrincipal());
         model.addAttribute("member", memberVO);
@@ -57,7 +59,7 @@ public class MemberController {
     }
 
     @GetMapping("update")
-    public String update(Authentication authentication, Model model){
+    public String update(Authentication authentication, Model model) {
         log.info("=Update Form=");
         MemberVO memberVO = memberService.view((MemberVO) authentication.getPrincipal());
         model.addAttribute("member", memberVO);
@@ -66,14 +68,14 @@ public class MemberController {
 
     @PostMapping("update")
     @ResponseBody
-    public Map<String, Object> update(@RequestBody MemberVO memberVO){
+    public Map<String, Object> update(@RequestBody MemberVO memberVO) {
         log.info("=UPDATE Member=");
         log.info("=MemberVO = {}", memberVO);
-        Map<String,Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
 
         int updated = memberService.update(memberVO);
 
-        if(updated == 1) { // 성공
+        if (updated == 1) { // 성공
             map.put("status", 204);
         } else {
             map.put("status", 404);
@@ -84,14 +86,14 @@ public class MemberController {
 
     @PostMapping("delete")
     @ResponseBody
-    public Map<String, Object> delete(@RequestBody MemberVO memberVO, HttpSession session){
+    public Map<String, Object> delete(@RequestBody MemberVO memberVO, HttpSession session) {
         log.info("=DELETE Member=");
         log.info("=MemberVO = {}", memberVO);
         Map<String, Object> map = new HashMap<>();
 
         int updated = memberService.delete(memberVO);
 
-        if(updated == 1) { // 성공
+        if (updated == 1) { // 성공
             map.put("status", 204);
             // 세션에서 제거
             session.invalidate();

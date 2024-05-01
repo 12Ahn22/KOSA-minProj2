@@ -19,7 +19,7 @@
 <%@include file="../include/header.jsp" %>
 <main class="container">
     <h1>LOGIN</h1>
-    <c:if test="${error}">${exception}</c:if>
+    <c:if test="${error}"><span class="text-danger">${exception}</span></c:if>
 
     <form id="loginForm" method="post" action="/member/login">
         <div>
