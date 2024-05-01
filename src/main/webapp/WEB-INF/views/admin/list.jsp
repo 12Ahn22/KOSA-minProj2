@@ -106,8 +106,9 @@
             const num = target.dataset['num'];
             const size = document.getElementById("size").value;
             const searchKey = document.getElementById("searchKey").value;
-            const lockCheck = document.getElementById("lockCheck").value;
-            location = `?pageNo=\${num}&size=\${size}&searchKey=\${searchKey}&lockCheck=\${lockCheck}`;
+            const lockCheck = document.getElementById("lockCheck");
+            console.log("checked?" , lockCheck);
+            location = `?pageNo=\${num}&size=\${size}&searchKey=\${searchKey}&lockCheck=\${lockCheck.checked? lockCheck.value : ''}`;
         });
 
     document.querySelector('#size').addEventListener('change', (e) => {
