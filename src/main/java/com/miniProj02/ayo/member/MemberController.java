@@ -1,12 +1,16 @@
 package com.miniProj02.ayo.member;
 
+import com.miniProj02.ayo.entity.MemberFormDTO;
 import com.miniProj02.ayo.entity.MemberVO;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -35,9 +39,21 @@ public class MemberController {
 
     @PostMapping("insert")
     @ResponseBody
-    public Map<String, Object> insert(@RequestBody MemberVO memberVO) {
-        log.info("=Insert Member= {}", memberVO);
+    public Map<String, Object> insert(@RequestBody @Valid MemberFormDTO memberFormDTO, BindingResult bindingResult) {
+        log.info("=Insert Member= {}", memberFormDTO);
         Map<String, Object> map = new HashMap<>();
+
+        MemberVO memberVO = MemberVO.builder()
+                .id(memberFormDTO.getId())
+                .name(memberFormDTO.getName())
+                .password(memberFormDTO.getPassword())
+                .birthdate(memberFormDTO.getBirthdate())
+                .phone(memberFormDTO.getPhone())
+                .address(memberFormDTO.getAddress())
+                .gender(memberFormDTO.getGender())
+                .build();
+
+        if (checkMemberFormDTO(bindingResult, map, memberVO)) return map;
 
         int updated = memberService.insert(memberVO);
         // 이 아래를 한번에 처리 하는 방법이 없으려나?
@@ -52,12 +68,12 @@ public class MemberController {
 
     @PostMapping("duplicate")
     @ResponseBody
-    public Map<String,Object> isDuplicated(@RequestBody MemberVO memberVO){
+    public Map<String, Object> isDuplicated(@RequestBody MemberVO memberVO) {
         Map<String, Object> map = new HashMap<>();
         MemberVO searchMember = memberService.view(memberVO);
-        if(searchMember == null) {
+        if (searchMember == null) {
             map.put("status", 204);
-        }else {
+        } else {
             map.put("status", 404);
             map.put("statusMessage", "해당 아이디는 이미 사용중입니다.");
         }
@@ -82,10 +98,22 @@ public class MemberController {
 
     @PostMapping("update")
     @ResponseBody
-    public Map<String, Object> update(@RequestBody MemberVO memberVO) {
+    public Map<String, Object> update(@RequestBody @Valid MemberFormDTO memberFormDTO, BindingResult bindingResult) {
         log.info("=UPDATE Member=");
-        log.info("=MemberVO = {}", memberVO);
+        log.info("=MemberVO = {}", memberFormDTO);
         Map<String, Object> map = new HashMap<>();
+
+        MemberVO memberVO = MemberVO.builder()
+                .id(memberFormDTO.getId())
+                .name(memberFormDTO.getName())
+                .password(memberFormDTO.getPassword())
+                .birthdate(memberFormDTO.getBirthdate())
+                .phone(memberFormDTO.getPhone())
+                .address(memberFormDTO.getAddress())
+                .gender(memberFormDTO.getGender())
+                .build();
+
+        if (checkMemberFormDTO(bindingResult, map, memberVO)) return map;
 
         int updated = memberService.update(memberVO);
 
@@ -116,5 +144,26 @@ public class MemberController {
             map.put("statusMessage", "회원 탈퇴에 실패했습니다.");
         }
         return map;
+    }
+
+    /**
+     * insert, update validation check
+     */
+    private boolean checkMemberFormDTO(BindingResult bindingResult, Map<String, Object> map, MemberVO memberVO) {
+        if (bindingResult.hasErrors()) {
+            log.info("member/insert error => {}", memberVO);
+            map.put("status", 404);
+            // 에러들 확인
+            for (FieldError error : bindingResult.getFieldErrors()) {
+                String fieldName = error.getField();
+                String errorMessage = error.getDefaultMessage();
+                log.error("filedName =>{}", fieldName);
+                log.error("errorMessage =>{}", errorMessage);
+                // 가장 마지막 에러 넣어서 보내기
+                map.put("statusMessage", errorMessage);
+            }
+            return true;
+        }
+        return false;
     }
 }
