@@ -34,7 +34,7 @@
         />
         <label for="lockCheck">계정 잠금 여부 체크:</label><input type="checkbox" id="lockCheck" name="lockCheck"
         ${param.lockCheck.equals("on") ? 'checked':''}/>
-        <input type="submit" value="검색"/>
+        <input type="submit" class="btn btn-primary" value="검색"/>
     </form>
 
     <%--검색 결과 테이블--%>
@@ -47,6 +47,7 @@
             <th scope="col">휴대번호</th>
             <th scope="col">권한</th>
             <th scope="col">계정 잠금</th>
+            <th scope="col"></th>
         </tr>
         </thead>
         <tbody>
@@ -57,7 +58,9 @@
                 <td>${member.gender}</td>
                 <td>${member.phone}</td>
                 <td>${member.getAuthName()}</td>
-                <td>${member.account_locked}</td>
+                <td>${member.account_locked} <input type="checkbox" id="account_locked" name="account_locked"
+                                                    value="Y" ${member.account_locked == 'Y' ? 'checked' : ''}/></td>
+                <td><button id="delete-btn" class="btn btn-danger">계정 삭제</button></td>
             </tr>
         </c:forEach>
         </tbody>
