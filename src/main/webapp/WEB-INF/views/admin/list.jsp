@@ -33,7 +33,7 @@
                 placeholder="Search..."
         />
         <label for="lockCheck">계정 잠금 여부 체크:</label><input type="checkbox" id="lockCheck" name="lockCheck"
-        ${param.lockCheck.equals("on") ? 'checked':''}/>
+    ${param.lockCheck.equals("on") ? 'checked':''}/>
         <input type="submit" class="btn btn-primary" value="검색"/>
     </form>
 
@@ -59,8 +59,10 @@
                 <td>${member.phone}</td>
                 <td>${member.getAuthName()}</td>
                 <td><input type="checkbox" name="account_locked"
-                                                    value="${member.id}" ${member.account_locked == 'Y' ? 'checked' : ''}/></td>
-                <td><button id="delete-btn" class="btn btn-danger">계정 삭제</button></td>
+                           value="${member.id}" ${member.account_locked == 'Y' ? 'checked' : ''}/></td>
+                <td>
+                    <button name="delete-btn" class="btn btn-danger" data-id="${member.id}">계정 삭제</button>
+                </td>
             </tr>
         </c:forEach>
         </tbody>
@@ -107,20 +109,22 @@
             const size = document.getElementById("size").value;
             const searchKey = document.getElementById("searchKey").value;
             const lockCheck = document.getElementById("lockCheck");
-            console.log("checked?" , lockCheck);
+            console.log("checked?", lockCheck);
             location = `?pageNo=\${num}&size=\${size}&searchKey=\${searchKey}&lockCheck=\${lockCheck.checked? lockCheck.value : ''}`;
         });
 
+    // 옵션 변경에 의한 검색 요청
     document.querySelector('#size').addEventListener('change', (e) => {
         searchForm.submit();
     });
 
-    document.getElementById("lockCheck").addEventListener('change',(e)=>{
+    document.getElementById("lockCheck").addEventListener('change', (e) => {
         searchForm.submit();
     })
 
-    document.getElementById("table").addEventListener("change",(e)=>{
-        if(e.target.name === "account_locked"){
+    // 계정 잠금 요청
+    document.getElementById("table").addEventListener("change", (e) => {
+        if (e.target.name === "account_locked") {
             // 계정 잠금 요청 보내기
             const id = e.target.value;
             const checked = e.target.checked;
@@ -143,9 +147,29 @@
         }
     })
 
+    // 계정 삭제 요청
+    document.getElementById("table").addEventListener("click", (e) => {
+        const searchParams = new URLSearchParams(location.search);
+        if (e.target.name === "delete-btn") {
+            fetch("delete", {
+                method: "POST",
+                body: JSON.stringify({id: e.target.dataset["id"]}),
+                headers: {"Content-type": "application/json; charset=utf-8"}
+            }).then((res) => res.json())
+                .then((data) => {
+                    if (data.status === 204) {
+                        alert("회원 삭제에 성공했습니다.");
+                        location=`list?\${searchParams.toString()}`;
+                    } else {
+                        alert("회원 삭제에 실패했습니다.");
+                    }
+                });
+        }
+    })
+
     const url = new URL(window.location.href);
     const urlParams = url.searchParams;
-    if(urlParams.get("searchKey")){
+    if (urlParams.get("searchKey")) {
         searchKey.value = urlParams.get("searchKey");
     }
 </script>
