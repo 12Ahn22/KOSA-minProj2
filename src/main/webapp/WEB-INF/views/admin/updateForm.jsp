@@ -12,7 +12,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>RATTY | PROFILE</title>
+    <title>RATTY | 회원 수정</title>
     <%@include file="../include/bootStrap.jsp" %>
 </head>
 <body>
@@ -28,11 +28,11 @@
         </div>
         <div>
             <label for="password">비밀번호:</label>
-            <input type="password" id="password" name="password" required autocomplete="off">
+            <input type="password" id="password" name="password" autocomplete="off">
             <br/>
             <label for="password2">비밀번호확인:</label>
             <!-- 서버로 보내지 않을 내용은 name을 써주지않는다. -->
-            <input type="password" id="password2" required autocomplete="off">
+            <input type="password" id="password2" autocomplete="off">
         </div>
         <div>
             <label for="phone">전화번호:</label>
@@ -46,6 +46,7 @@
             <label for="birthdate">생년월일:</label>
             <input type="date" id="birthdate" name="birthdate" value="${member.birthdate}" required>
         </div>
+
         <div>
             <label>성별:</label>
             <input type="radio" id="female" name="gender" value="F" ${member.gender.equals('F') ? 'checked'
@@ -54,6 +55,15 @@
             <input type="radio" id="male" name="gender" value="M" ${member.gender.equals('F') ? '' :'checked'}
                    disabled>
             <label for="male">남성</label>
+        </div>
+        <div>
+            <label for="auth">권한:</label>
+            <input type="number" id="auth" name="auth" value="${member.auth}" required>
+        </div>
+        <div>
+            <label for="account_locked">계정 잠금:</label>
+            <input type="checkbox" id="account_locked" name="account_locked"
+                   value="Y" ${member.account_locked == 'Y' ? 'checked' : ''} />
         </div>
         <div>
             <%--                <label>취미:</label>--%>
@@ -81,7 +91,7 @@
                 if (data.status === 204) {
                     alert("회원 정보 수정에 성공했습니다.");
                     // 페이지 리다이렉트
-                    location = "/member/profile";
+                    location = "/admin/view?id=${member.id}";
                 } else {
                     alert("회원 정보 수정에 실패했습니다.");
                 }

@@ -21,4 +21,6 @@ public interface MemberMapper {
     List<MemberVO> getList(PageRequestVO pageRequestVO);
 
     int getTotalCount(PageRequestVO pageRequestVO);
+
+    int adminUpdate(MemberVO memberVO);
 }

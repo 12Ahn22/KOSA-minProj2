@@ -11,6 +11,7 @@ const formToSerialize = (formId) => JSON.stringify([].reduce.call(document.query
                             data[element.name] = element.value;
                         } else if (element.type == 'checkbox') {
                             //배열로 변경
+                            console.log("check?", element)
                             data[element.name] = [element.value];
                         }
                     } else if(typeof data[element.name] == 'string') {

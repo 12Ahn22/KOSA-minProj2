@@ -70,4 +70,12 @@ public class MemberService implements UserDetailsService {
 
         return pageResponseVO;
     }
+
+    public int adminUpdate(MemberVO memberVO) {
+        memberVO.hashPassword(bCryptPasswordEncoder);
+        // 계정 잠금 값이 = null이면, "N"값
+        if(memberVO.getAccount_locked() == null) memberVO.setAccount_locked("N");
+        // 권한 검사 (일단 보류)
+        return memberMapper.adminUpdate(memberVO);
+    }
 }

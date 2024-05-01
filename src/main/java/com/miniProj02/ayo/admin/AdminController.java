@@ -10,6 +10,8 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -46,12 +48,39 @@ public class AdminController {
         return "admin/view";
     }
 
+    @GetMapping("update")
+    public String update(@RequestParam String id, Model model){
+        log.info("=admin/update Form=");
+        MemberVO memberVO = memberService.view(MemberVO.builder().id(id).build());
+        model.addAttribute("member", memberVO);
+        return "admin/updateForm";
+    }
+
+    @PostMapping("update")
+    @ResponseBody
+    public Map<String,Object> update(@RequestBody MemberVO memberVO){
+        log.info("=admin/update=");
+        log.info("MemberVO = {}", memberVO);
+        Map<String,Object> map = new HashMap<>();
+
+        int updated = memberService.adminUpdate(memberVO);
+
+        if(updated == 1) { // 성공
+            map.put("status", 204);
+        } else {
+            map.put("status", 404);
+            map.put("statusMessage", "회원 수정에 실패했습니다.");
+        }
+        return map;
+    }
+
     @PostMapping("delete")
     @ResponseBody
     public Map<String, Object> delete(@RequestBody MemberVO memberVO, HttpSession session){
         log.info("=Admin/delete Member=");
         log.info("=MemberVO = {}", memberVO);
         Map<String, Object> map = new HashMap<>();
+
         int updated = memberService.delete(memberVO);
         
         if(updated == 1) { // 성공
