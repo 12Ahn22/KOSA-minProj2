@@ -23,7 +23,7 @@
         <div>
             <label for="id">아이디:</label>
             <input type="text" id="id" name="id" required>
-            <input type="button" id="duplicateId" value="중복확인">
+            <input class="btn btn-outline-success btn-sm" type="button" id="duplicateId" value="중복확인">
             <span id="duplicateMsg"></span>
         </div>
         <div>
@@ -70,24 +70,68 @@
 </main>
 <script type="text/javascript" src="/js/common.js"></script>
 <script>
-    const uForm = document.getElementById("uForm");
-    uForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-        fetch("insert", {
+
+    // 계정 중복 체크
+    let isDuplicated = false;
+    document.getElementById("duplicateId").addEventListener("click",()=>{
+        const id = document.getElementById("id").value;
+        const duplicateMsg = document.getElementById("duplicateMsg");
+        fetch("duplicate", {
             method: "POST",
-            body: formToSerialize("uForm"),
+            body: JSON.stringify({id}),
             headers: {"Content-type": "application/json; charset=utf-8"}
         }).then((res) => res.json())
             .then((data) => {
-                console.log("data" , data);
                 if (data.status === 204) {
-                    alert("회원 가입에 성공했습니다.");
-                    // 페이지 리다이렉트
-                    location = "/member/login";
+                    alert("사용 가능한 계정입니다.");
+                    isDuplicated = true;
+                    duplicateMsg.textContent = "사용 가능한 계정입니다.";
+                    duplicateMsg.className = "text-primary";
                 } else {
-                    alert("회원 가입에 실패했습니다.");
+                    alert("사용 불가능한 계정입니다.");
+                    isDuplicated = false;
+                    duplicateMsg.textContent = "사용 불가능한 계정입니다.";
+                    duplicateMsg.className = "text-danger";
                 }
             });
+    })
+
+    // 회원 가입 요청
+    const uForm = document.getElementById("uForm");
+    uForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        // 유효성 검사
+        validateSamePassword(password, password2);
+        validatePhoneNumber(phone);
+        if(!isDuplicated){
+            alert("계정 중복 체크를 해주세요.");
+            return;
+        }
+
+            fetch("insert", {
+                method: "POST",
+                body: formToSerialize("uForm"),
+                headers: {"Content-type": "application/json; charset=utf-8"}
+            }).then((res) => res.json())
+                .then((data) => {
+                    console.log("data" , data);
+                    if (data.status === 204) {
+                        alert("회원 가입에 성공했습니다.");
+                        // 페이지 리다이렉트
+                        location = "/member/login";
+                    } else {
+                        alert("회원 가입에 실패했습니다.");
+                    }
+                });
+    })
+
+
+    // id input 값을 수정하면, 계정 중복 검사 초기화
+    document.getElementById("id").addEventListener("blur",()=>{
+        isDuplicated = false;
+        duplicateMsg.textContent = "계정 중복 검사를 진행해주세요.";
+        duplicateMsg.className = "text-danger";
     })
 </script>
 </body>

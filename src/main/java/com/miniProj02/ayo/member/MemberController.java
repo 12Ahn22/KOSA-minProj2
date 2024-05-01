@@ -50,6 +50,20 @@ public class MemberController {
         return map;
     }
 
+    @PostMapping("duplicate")
+    @ResponseBody
+    public Map<String,Object> isDuplicated(@RequestBody MemberVO memberVO){
+        Map<String, Object> map = new HashMap<>();
+        MemberVO searchMember = memberService.view(memberVO);
+        if(searchMember == null) {
+            map.put("status", 204);
+        }else {
+            map.put("status", 404);
+            map.put("statusMessage", "해당 아이디는 이미 사용중입니다.");
+        }
+        return map;
+    }
+
     @GetMapping("profile")
     public String profile(Authentication authentication, Model model) {
         log.info("=Profile=");
