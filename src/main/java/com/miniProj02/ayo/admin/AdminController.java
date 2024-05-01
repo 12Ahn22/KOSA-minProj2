@@ -36,6 +36,11 @@ public class AdminController {
         PageResponseVO<MemberVO> pageResponseVO = memberService.list(pageRequestVO);
         List<CodeVO> codeList = codeService.getList();
 
+        if(bindingResult.hasErrors()){
+            log.info("error {}", bindingResult.getFieldErrors());
+            return "error";
+        }
+
         model.addAttribute("pageResponseVO", pageResponseVO);
         model.addAttribute("sizes", codeList);
         return "admin/list";
@@ -94,7 +99,7 @@ public class AdminController {
 
     @PostMapping("delete")
     @ResponseBody
-    public Map<String, Object> delete(@RequestBody MemberVO memberVO, HttpSession session){
+    public Map<String, Object> delete(@RequestBody MemberVO memberVO){
         log.info("=Admin/delete Member=");
         log.info("=MemberVO = {}", memberVO);
         Map<String, Object> map = new HashMap<>();

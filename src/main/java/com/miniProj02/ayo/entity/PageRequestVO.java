@@ -32,7 +32,7 @@ public class PageRequestVO {
 
     private String searchKey;
 
-    private boolean lockCheck;
+    private Boolean lockCheck;
 
     public int getSkip(){
         return (pageNo - 1) * 10;
