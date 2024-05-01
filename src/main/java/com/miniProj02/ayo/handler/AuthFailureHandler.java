@@ -4,6 +4,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.security.authentication.DisabledException;
@@ -17,10 +18,11 @@ import java.net.URLEncoder;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class AuthFailureHandler extends SimpleUrlAuthenticationFailureHandler {
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-        String msg = "Invalid Email or Password";
+        String msg = "아이디 또는 비밀번호가 잘못되었습니다";
 
         // exception 관련 메세지 처리
         if (exception instanceof LockedException) {
@@ -33,7 +35,7 @@ public class AuthFailureHandler extends SimpleUrlAuthenticationFailureHandler {
             msg = "아이디 또는 비밀번호가 잘못되었습니다";
         }
 
-        setDefaultFailureUrl("/member/login?error=true&exception=" + URLEncoder.encode(msg, "utf-8"));
+        setDefaultFailureUrl("/member/loginForm?error=true&exception=" + URLEncoder.encode(msg, "utf-8"));
         super.onAuthenticationFailure(request, response, exception);
     }
 }

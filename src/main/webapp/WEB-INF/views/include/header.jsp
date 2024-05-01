@@ -21,7 +21,7 @@
                 <%--비 로그인 상태--%>
                 <c:when test="${empty principal}">
                     <li class="nav-item"><a class="nav-link" href="/member/insert">회원가입</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/member/login">로그인</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/member/loginForm">로그인</a></li>
                 </c:when>
                 <c:otherwise>
                     <%--로그인 상태일 때,--%>

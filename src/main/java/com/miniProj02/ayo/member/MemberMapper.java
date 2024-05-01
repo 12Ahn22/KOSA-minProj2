@@ -25,4 +25,8 @@ public interface MemberMapper {
     int adminUpdate(MemberVO memberVO);
 
     int updateAccountLock(MemberVO memberVO);
+
+    void loginCountInc(MemberVO resultVO);
+
+    void loginCountClear(String id);
 }

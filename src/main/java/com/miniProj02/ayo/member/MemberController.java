@@ -23,9 +23,9 @@ import java.util.Map;
 public class MemberController {
     private final MemberService memberService;
 
-    @GetMapping("login")
+    @GetMapping("loginForm")
     public String login(@RequestParam(required = false) String error, @RequestParam(required = false) String exception, Model model) {
-        log.info("=Login=");
+        log.info("=loginForm=");
         model.addAttribute("error", error);
         model.addAttribute("exception", exception);
         return "member/loginForm";
@@ -152,6 +152,7 @@ public class MemberController {
     private boolean checkMemberFormDTO(BindingResult bindingResult, Map<String, Object> map, MemberVO memberVO) {
         if (bindingResult.hasErrors()) {
             log.info("member/insert error => {}", memberVO);
+            
             map.put("status", 404);
             // 에러들 확인
             for (FieldError error : bindingResult.getFieldErrors()) {

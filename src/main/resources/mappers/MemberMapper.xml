@@ -25,14 +25,14 @@
 
     <select id="login" resultType="MemberVO">
         select
-            id, name, password, birthdate, address, phone, gender, auth, account_locked
+            id, name, password, birthdate, address, phone, gender, auth, account_locked, login_count
         from members
         where id = #{id}
     </select>
 
     <select id="view" resultType="MemberVO">
         select
-            id, name, password, birthdate, address, phone, gender, auth, account_locked
+            id, name, password, birthdate, address, phone, gender, auth, account_locked, login_count
         from members
         where id = #{id}
     </select>
@@ -58,6 +58,26 @@
     <update id="updateAccountLock" parameterType="MemberVO">
         update members
         set account_locked = #{account_locked}
+        where id = #{id}
+    </update>
+
+    <update id="loginCountInc" parameterType="MemberVO">
+        update members
+        set login_count = login_count + 1
+        <choose>
+            <when test="login_count > 3">
+                , account_locked = 'Y'
+            </when>
+            <otherwise>
+                , account_locked = 'N'
+            </otherwise>
+        </choose>
+        where id = #{id}
+    </update>
+
+    <update id="loginCountClear" parameterType="String">
+        update members
+        set login_count = 0
         where id = #{id}
     </update>
 

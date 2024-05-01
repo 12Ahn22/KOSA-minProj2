@@ -21,6 +21,7 @@ public class AuthSucessHandler extends SimpleUrlAuthenticationSuccessHandler {
                                         // authentication에 로그인한 사용자 정보
                                         Authentication authentication) throws IOException, ServletException {
         // 로그인 성공 시, 해줄 처리들
+        memberMapper.loginCountClear(authentication.getName());
         super.onAuthenticationSuccess(request, response, authentication);
     }
 }

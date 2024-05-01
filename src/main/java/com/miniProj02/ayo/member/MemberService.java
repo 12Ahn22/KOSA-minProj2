@@ -57,8 +57,11 @@ public class MemberService implements UserDetailsService {
         if (resultVO == null) {
             log.info("사용자가 존재하지 않습니다.");
             throw new UsernameNotFoundException(username + " 사용자가 존재하지 않습니다");
+//            return null; // 사용자가 존재하지 않는 경우 null 반환
         }
-        log.info("resultVO = {}", resultVO);
+
+        // 로그인 시도 카운트 증가
+        memberMapper.loginCountInc(resultVO);
         return resultVO;
     }
 
