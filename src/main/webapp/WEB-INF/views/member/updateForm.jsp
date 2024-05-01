@@ -71,6 +71,11 @@
     const uForm = document.getElementById("uForm");
     uForm.addEventListener("submit", (e) => {
         e.preventDefault();
+
+        // 유효성 검사
+        if(!validateSamePassword(password, password2)) return;
+        if(!validatePhoneNumber(phone)) return;
+
         fetch("update", {
             method: "POST",
             body: formToSerialize("uForm"),

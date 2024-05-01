@@ -36,20 +36,18 @@ const formToSerialize = (formId) => JSON.stringify([].reduce.call(document.query
  * 유효성 검사
  */
 
-const validateSamePassword = (password, password2, cb) => {
+const validateSamePassword = (password, password2) => {
     if (password.value !== password2.value) {
         alert('비밀번호와 비밀번호 확인 값이 다릅니다.');
-        cb();
         return false;
     }
     return true;
 };
 
-const validatePhoneNumber = (phone, cb) => {
+const validatePhoneNumber = (phone) => {
     const phoneRegex = /\d{3}-\d{4}-\d{4}/;
     if (!phoneRegex.test(phone.value)) {
         alert('010-XXXX-XXXX 형식으로 작성해주세요');
-        cb();
         return false;
     }
     return true;
