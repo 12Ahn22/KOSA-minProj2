@@ -31,6 +31,9 @@
         <label>비밀번호:</label>
         <input type="password" id="password" name="password" required><br>
         <textarea id="editor" name="content"></textarea>
+        <c:if test="${not empty board.boardFileVO}">
+            <label>첨부파일 : </label><a id="board_file" href="fileDownload/${board.id}">${board.boardFileVO.original_filename}</a><br/>
+        </c:if>
         <input class="btn btn-primary" type="submit" value="수정">
         <a class="btn btn-secondary" href="javascript:history.back();">취소</a>
     </form>

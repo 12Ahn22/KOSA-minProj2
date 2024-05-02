@@ -63,6 +63,14 @@ public class BoardService {
         return boardMapper.checkPassword(boardVO);
     }
 
+    public BoardVO fetchUpdateData(BoardVO boardVO) {
+        BoardVO findBoardVO = boardMapper.view(boardVO);
+        // 첨부파일도 가져오기
+        findBoardVO.setBoardFileVO(boardFileMapper.getFile(boardVO));
+
+        return findBoardVO;
+    }
+
     public int delete(BoardVO boardVO) {
         return boardMapper.delete(boardVO);
     }
@@ -134,4 +142,5 @@ public class BoardService {
                 .size(file.getSize())
                 .build();
     }
+
 }

@@ -211,7 +211,9 @@
                     span_viewCount.innerText = board.view_count;
                     span_author.innerText = board.author;
                     span_createdAt.innerText = board.created_at;
-                    board_file.innerText = board.boardFileVO.original_filename;
+                    if(board.boardFileVO !== null){
+                        board_file.innerText = board.boardFileVO.original_filename;
+                    }
                     board_file.setAttribute("href",`fileDownload/\${board.id}`);
                     selectedId = board.id;
                 } else {
