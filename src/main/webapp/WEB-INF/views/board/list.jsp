@@ -95,9 +95,9 @@
                 <label>게시물 번호:</label><span id="bno"></span><br/>
                 <label>제목 : </label><span id="title"></span><br/>
                 <label>내용 : </label><span id="content"></span><br/>
-                <label>ViewCount :</label><span id="viewCount"></span><br/>
+                <label>ViewCount :</label><span id="view_count"></span><br/>
                 <label>작성자 : </label><span id="author"></span><br/>
-                <label>작성일 : </label><span id="createdAt"></span><br/>
+                <label>작성일 : </label><span id="created_at"></span><br/>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
@@ -137,6 +137,49 @@
     if(urlParams.get("searchKey")){
         searchKey.value = urlParams.get("searchKey");
     }
+
+    const boardViewModel = document.getElementById("boardViewModel");
+    const span_bno = document.getElementById("bno");
+    const span_title = document.getElementById("title");
+    const span_content = document.getElementById("content");
+    const span_viewCount = document.getElementById("view_count");
+    const span_author= document.getElementById("author");
+    const span_createdAt = document.getElementById("created_at");
+
+    boardViewModel.addEventListener('hidden.bs.modal',(e)=>{
+        span_bno.innerText = "";
+        span_title.innerText = "";
+        span_content.innerText = "";
+        span_viewCount.innerText = "";
+        span_author.innerText = "";
+        span_createdAt.innerText = "";
+    });
+
+    boardViewModel.addEventListener('shown.bs.modal',  (e) => {
+        const a = e.relatedTarget;
+        const id = a.getAttribute('data-bs-id');
+
+        // 요청
+        fetch(`view?id=\${id}`, {
+            method: "GET",
+            headers: { "Content-type": "application/json; charset=utf-8" }
+        }).then((res) => res.json())
+            .then((data) => {
+                if (data.status === 204) {
+                    //성공
+                    const board = data.board;
+                    span_bno.innerText = board.id;
+                    span_title.innerText = board.title;
+                    span_content.innerText = board.content;
+                    span_viewCount.innerText = board.view_count;
+                    span_author.innerText = board.author;
+                    span_createdAt.innerText = board.created_at;
+                } else {
+                    alert("게시글을 가져오는 데 실패했습니다.");
+                }
+            });
+
+    })
 </script>
 </body>
 </html>

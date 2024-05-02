@@ -13,4 +13,10 @@
         count(*)
         from boards
     </select>
+
+    <select id="view" resultType="BoardVO">
+        select id, title, author, content, created_at, view_count
+        from boards
+        where id = #{id}
+    </select>
 </mapper>

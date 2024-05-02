@@ -23,4 +23,8 @@ public class BoardService {
         pageResponseVO = new PageResponseVO<>(list,total, pageRequestVO.getPageNo(), pageRequestVO.getSize());
         return pageResponseVO;
     }
+
+    public BoardVO view(BoardVO boardVO) {
+        return boardMapper.view(boardVO);
+    }
 }

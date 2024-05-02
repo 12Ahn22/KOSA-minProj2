@@ -13,4 +13,6 @@ public interface BoardMapper {
     List<BoardVO> getList(PageRequestVO pageRequestVO);
 
     int getTotalCount(PageRequestVO pageRequestVO);
+
+    BoardVO view(BoardVO boardVO);
 }

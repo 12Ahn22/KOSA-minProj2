@@ -64,8 +64,17 @@ public class BoardContorller {
     }
 
     @GetMapping("view")
-    public String view(){
-        return "board/view";
+    @ResponseBody
+    public Map<String, Object> view(BoardVO boardVO){
+        Map<String, Object> map = new HashMap<>();
+        BoardVO findBoardVO = boardService.view(boardVO);
+        if(findBoardVO != null){
+            map.put("board", findBoardVO);
+            map.put("status", 204);
+        }else{
+            map.put("status", 404);
+        }
+        return map;
     }
 
     @PostMapping("delete")
