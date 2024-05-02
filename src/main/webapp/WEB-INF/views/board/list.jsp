@@ -96,10 +96,11 @@
             <div class="modal-body">
                 <label>게시물 번호:</label><span id="bno"></span><br/>
                 <label>제목 : </label><span id="title"></span><br/>
-                <div id="content"></div>
-                <label>ViewCount :</label><span id="view_count"></span><br/>
+                <label>조회수 :</label><span id="view_count"></span><br/>
                 <label>작성자 : </label><span id="author"></span><br/>
                 <label>작성일 : </label><span id="created_at"></span><br/>
+                <div id="content"></div>
+                <label>첨부파일 : </label><a id="board_file" href=""></a><br/>
             </div>
             <div class="modal-footer justify-content-between">
                 <div>
@@ -176,6 +177,7 @@
     const span_viewCount = document.getElementById("view_count");
     const span_author = document.getElementById("author");
     const span_createdAt = document.getElementById("created_at");
+    const board_file = document.getElementById("board_file");
     let selectedId;
 
     boardViewModel.addEventListener('hidden.bs.modal', (e) => {
@@ -185,6 +187,7 @@
         span_viewCount.innerText = "";
         span_author.innerText = "";
         span_createdAt.innerText = "";
+        board_file.innerText = "";
     });
 
     boardViewModel.addEventListener('show.bs.modal', (e) => {
@@ -208,6 +211,8 @@
                     span_viewCount.innerText = board.view_count;
                     span_author.innerText = board.author;
                     span_createdAt.innerText = board.created_at;
+                    board_file.innerText = board.boardFileVO.original_filename;
+                    board_file.setAttribute("href",`fileDownload/\${board.boardFileVO.id}`);
                     selectedId = board.id;
                 } else {
                     alert("게시글을 가져오는 데 실패했습니다.");

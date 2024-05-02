@@ -50,6 +50,8 @@ public class BoardService {
             boardMapper.increaseViewCount(boardVO);
         }
         BoardVO findBoardVO = boardMapper.view(boardVO);
+        // 첨부파일도 가져오기
+        findBoardVO.setBoardFileVO(boardFileMapper.getFile(boardVO));
         return findBoardVO;
     }
 

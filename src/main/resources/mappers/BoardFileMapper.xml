@@ -8,4 +8,13 @@
         (board_id ,original_filename ,real_filename ,content_type ,size)
         values (#{board_id} ,#{original_filename} ,#{real_filename} ,#{content_type} ,#{size})
     </insert>
+
+    <select id="getFile" parameterType="BoardVO">
+        select
+            id, board_id ,original_filename ,real_filename ,content_type ,size, created_at
+        from board_files
+        where board_id = #{id}
+<!--        일단 첨부 파일은 하나로 고정-->
+        limit 0, 1
+    </select>
 </mapper>
