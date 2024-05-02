@@ -15,4 +15,6 @@ public interface BoardMapper {
     int getTotalCount(PageRequestVO pageRequestVO);
 
     BoardVO view(BoardVO boardVO);
+
+    BoardVO checkPassword(BoardVO boardVO);
 }

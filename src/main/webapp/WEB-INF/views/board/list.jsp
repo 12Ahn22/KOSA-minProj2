@@ -101,10 +101,33 @@
             </div>
             <div class="modal-footer justify-content-between">
                 <div>
-                    <button type="button" class="btn btn-primary">수정</button>
-                    <button type="button" class="btn btn-danger">삭제</button>
+                    <button type="button" class="btn btn-primary" data-bs-mode="update" data-bs-toggle="modal"
+                            data-bs-target="#passwordModal">수정
+                    </button>
+                    <button type="button" class="btn btn-danger" data-bs-mode="delete" data-bs-toggle="modal"
+                            data-bs-target="#passwordModal">삭제
+                    </button>
                 </div>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="passwordModal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal-password-title">게시글</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>게시글 비밀번호를 입력하세요.</p>
+                <input type="password" id="password-modal-password"/>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                <button type="button" class="btn btn-primary" id="password-modal-btn">제출</button>
             </div>
         </div>
     </div>
@@ -138,7 +161,7 @@
     const url = new URL(window.location.href);
     const urlParams = url.searchParams;
     const searchKey = document.getElementById("searchKey");
-    if(urlParams.get("searchKey")){
+    if (urlParams.get("searchKey")) {
         searchKey.value = urlParams.get("searchKey");
     }
 
@@ -147,10 +170,11 @@
     const span_title = document.getElementById("title");
     const span_content = document.getElementById("content");
     const span_viewCount = document.getElementById("view_count");
-    const span_author= document.getElementById("author");
+    const span_author = document.getElementById("author");
     const span_createdAt = document.getElementById("created_at");
+    let selectedId;
 
-    boardViewModel.addEventListener('hidden.bs.modal',(e)=>{
+    boardViewModel.addEventListener('hidden.bs.modal', (e) => {
         span_bno.innerText = "";
         span_title.innerText = "";
         span_content.innerText = "";
@@ -159,14 +183,15 @@
         span_createdAt.innerText = "";
     });
 
-    boardViewModel.addEventListener('shown.bs.modal',  (e) => {
+    boardViewModel.addEventListener('show.bs.modal', (e) => {
+        selectedId = null;
         const a = e.relatedTarget;
         const id = a.getAttribute('data-bs-id');
 
         // 요청
         fetch(`view?id=\${id}`, {
             method: "GET",
-            headers: { "Content-type": "application/json; charset=utf-8" }
+            headers: {"Content-type": "application/json; charset=utf-8"}
         }).then((res) => res.json())
             .then((data) => {
                 if (data.status === 204) {
@@ -178,11 +203,59 @@
                     span_viewCount.innerText = board.view_count;
                     span_author.innerText = board.author;
                     span_createdAt.innerText = board.created_at;
+                    selectedId = board.id;
                 } else {
                     alert("게시글을 가져오는 데 실패했습니다.");
                 }
             });
+    })
 
+    const passwordModal = document.getElementById("passwordModal");
+    const passwordModalTitle = document.getElementById("modal-password-title");
+    let selectedMode;
+    passwordModal.addEventListener('show.bs.modal', (e) => {
+        const relatedTarget = e.relatedTarget;
+        const mode = relatedTarget.getAttribute('data-bs-mode');
+        if (mode === "update") {
+            passwordModalTitle.textContent = "게시글 수정";
+            selectedMode = "update";
+        } else if (mode === "delete") {
+            passwordModalTitle.textContent = "게시글 삭제";
+            selectedMode = "delete";
+        }
+    })
+
+    passwordModal.addEventListener('hidden.bs.modal', (e) => {
+        passwordModalTitle.textContent = "게시글";
+        password.value = "";
+    })
+
+    const passwordSubmitBtn = document.getElementById("password-modal-btn");
+    const password = document.getElementById("password-modal-password");
+    passwordSubmitBtn.addEventListener("click", (e) => {
+        if (selectedId === null) {
+            alert("게시글이 선택되지않았습니다.");
+            return;
+        }
+
+        // 비밀번호 확인 요청
+        fetch("checkPassword", {
+            method: "POST",
+            headers: {"Content-type": "application/json; charset=utf-8"},
+            body: JSON.stringify({
+                id: selectedId,
+                password: password.value,
+            })
+        }).then((res) => res.json())
+            .then((data) => {
+                if (data.status === 204) {
+                    alert("비밀번호 확인");
+                } else {
+                    alert("비밀번호가 잘못되었습니다.");
+                }
+            })
+
+        // 비밀번호 검증된 경우, 선택된 모드에 맞는 요청 보내기
     })
 </script>
 </body>

@@ -27,4 +27,8 @@ public class BoardService {
     public BoardVO view(BoardVO boardVO) {
         return boardMapper.view(boardVO);
     }
+
+    public BoardVO checkPassword(BoardVO boardVO) {
+        return boardMapper.checkPassword(boardVO);
+    }
 }

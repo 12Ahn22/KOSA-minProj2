@@ -77,6 +77,24 @@ public class BoardContorller {
         return map;
     }
 
+    @PostMapping("checkPassword")
+    @ResponseBody
+    public Map<String, Object> checkPassword(@RequestBody BoardVO boardVO){
+        log.info("board/checkPassword");
+        Map<String, Object> map = new HashMap<>();
+
+        BoardVO findBoardVO = boardService.checkPassword(boardVO);
+
+        if(findBoardVO != null){
+            map.put("board", findBoardVO);
+            map.put("status",204);
+        }else{
+            map.put("status", 404);
+        }
+
+        return map;
+    }
+
     @PostMapping("delete")
     @ResponseBody
     public Map<String, Object> delete(@RequestBody BoardVO boardVO){

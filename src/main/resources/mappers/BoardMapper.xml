@@ -19,4 +19,10 @@
         from boards
         where id = #{id}
     </select>
+
+    <select id="checkPassword" resultType="BoardVO">
+        select id, title, author, content, created_at, view_count
+        from boards
+        where id = #{id} AND password = #{password}
+    </select>
 </mapper>
