@@ -249,7 +249,33 @@
         }).then((res) => res.json())
             .then((data) => {
                 if (data.status === 204) {
-                    alert("비밀번호 확인");
+                    // 이후, 요청 보내기
+                    if (selectedMode === "update") {
+                        // updateForm으로 이동
+                        location = `update?id=\${selectedId}`;
+                    }
+                    if (selectedMode === "delete") {
+                        if (confirm("정말 삭제하시겠습니까?")) {
+                            fetch("delete", {
+                                method: "POST",
+                                headers: {"Content-type": "application/json; charset=utf-8"},
+                                body: JSON.stringify({
+                                    id: selectedId,
+                                    password: password.value
+                                })
+                            }).then((res) => res.json())
+                                .then((data) => {
+                                    console.log("data", data);
+                                    if(data.status === 204){
+                                        alert("게시글 삭제에 성공했습니다.")
+                                        const searchParams = new URLSearchParams(location.search);
+                                        location=`list?\${searchParams.toString()}`;
+                                    }else{
+                                        alert("게시글 삭제에 실패했습니다.")
+                                    }
+                                })
+                        }
+                    }
                 } else {
                     alert("비밀번호가 잘못되었습니다.");
                 }

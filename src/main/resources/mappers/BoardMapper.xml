@@ -25,4 +25,8 @@
         from boards
         where id = #{id} AND password = #{password}
     </select>
+
+    <delete id="delete" parameterType="BoardVO">
+        delete from boards where id = #{id} AND password = #{password}
+    </delete>
 </mapper>

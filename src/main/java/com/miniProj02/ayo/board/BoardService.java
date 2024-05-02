@@ -31,4 +31,8 @@ public class BoardService {
     public BoardVO checkPassword(BoardVO boardVO) {
         return boardMapper.checkPassword(boardVO);
     }
+
+    public int delete(BoardVO boardVO) {
+        return boardMapper.delete(boardVO);
+    }
 }

@@ -109,7 +109,6 @@
             const size = document.getElementById("size").value;
             const searchKey = document.getElementById("searchKey").value;
             const lockCheck = document.getElementById("lockCheck");
-            console.log("checked?", lockCheck);
             location = `?pageNo=\${num}&size=\${size}&searchKey=\${searchKey}&lockCheck=\${lockCheck.checked? lockCheck.value : ''}`;
         });
 

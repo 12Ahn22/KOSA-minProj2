@@ -98,7 +98,17 @@ public class BoardContorller {
     @PostMapping("delete")
     @ResponseBody
     public Map<String, Object> delete(@RequestBody BoardVO boardVO){
+        log.info("=board/delete=");
         Map<String, Object> map = new HashMap<>();
+
+        int updated = boardService.delete(boardVO);
+        if(updated == 1){
+            // 성공
+            map.put("status",204);
+        }else{
+            // 실패
+            map.put("status", 404);
+        }
         return map;
     }
 }
