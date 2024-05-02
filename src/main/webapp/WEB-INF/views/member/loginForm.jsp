@@ -23,6 +23,8 @@
     <c:if test="${error}"><span class="text-danger">${exception}</span></c:if>
 
     <form id="loginForm" method="post" action="/member/login">
+        <%-- csrf 토큰 설정 --%>
+        <sec:csrfInput/>
         <div>
             <label for="id">아이디:</label>
             <input type="text" id="id" name="id" required>

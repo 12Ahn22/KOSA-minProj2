@@ -35,19 +35,16 @@
         <button id="deleteBtn" class="btn btn-secondary">삭제</button>
     </div>
 </main>
+<script type="text/javascript" src="/js/common.js"></script>
 <script>
     const deleteBtn = document.getElementById("deleteBtn");
     const memberId = document.getElementById("memberId").value;
     console.log("memberId", memberId)
     deleteBtn.addEventListener("click", () => {
-        fetch("delete", {
-            method: "POST",
-            body: JSON.stringify({
+        if (confirm("탈퇴하시겠습니까?")) {
+            myFetch("delete", {
                 id: memberId
-            }),
-            headers: {"Content-type": "application/json; charset=utf-8"}
-        }).then((res) => res.json())
-            .then((data) => {
+            }, (data) => {
                 if (data.status === 204) {
                     alert("회원 탈퇴에 성공했습니다.");
                     // 페이지 리다이렉트
@@ -55,7 +52,8 @@
                 } else {
                     alert(data.statusMessage);
                 }
-            });
+            })
+        }
     })
 </script>
 </body>

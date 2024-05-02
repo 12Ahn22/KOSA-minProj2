@@ -82,21 +82,15 @@
     const uForm = document.getElementById("uForm");
     uForm.addEventListener("submit", (e) => {
         e.preventDefault();
-        fetch("update", {
-            method: "POST",
-            body: formToSerialize("uForm"),
-            headers: {"Content-type": "application/json; charset=utf-8"}
-        }).then((res) => res.json())
-            .then((data) => {
-                console.log("data" , data);
-                if (data.status === 204) {
-                    alert("회원 정보 수정에 성공했습니다.");
-                    // 페이지 리다이렉트
-                    location = "/admin/view?id=${member.id}";
-                } else {
-                    alert("회원 정보 수정에 실패했습니다.");
-                }
-            });
+        myFetch("update", "uForm",(data) => {
+            if (data.status === 204) {
+                alert("회원 정보 수정에 성공했습니다.");
+                // 페이지 리다이렉트
+                location = "/admin/view?id=${member.id}";
+            } else {
+                alert("회원 정보 수정에 실패했습니다.");
+            }
+        });
     })
 </script>
 </body>

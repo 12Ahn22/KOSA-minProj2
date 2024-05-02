@@ -74,27 +74,22 @@
 
     // 계정 중복 체크
     let isDuplicated = false;
-    document.getElementById("duplicateId").addEventListener("click",()=>{
+    document.getElementById("duplicateId").addEventListener("click", () => {
         const id = document.getElementById("id").value;
         const duplicateMsg = document.getElementById("duplicateMsg");
-        fetch("duplicate", {
-            method: "POST",
-            body: JSON.stringify({id}),
-            headers: {"Content-type": "application/json; charset=utf-8"}
-        }).then((res) => res.json())
-            .then((data) => {
-                if (data.status === 204) {
-                    alert("사용 가능한 계정입니다.");
-                    isDuplicated = true;
-                    duplicateMsg.textContent = "사용 가능한 계정입니다.";
-                    duplicateMsg.className = "text-primary";
-                } else {
-                    alert("사용 불가능한 계정입니다.");
-                    isDuplicated = false;
-                    duplicateMsg.textContent = "사용 불가능한 계정입니다.";
-                    duplicateMsg.className = "text-danger";
-                }
-            });
+        myFetch("duplicate", {id}, (data) => {
+            if (data.status === 204) {
+                alert("사용 가능한 계정입니다.");
+                isDuplicated = true;
+                duplicateMsg.textContent = "사용 가능한 계정입니다.";
+                duplicateMsg.className = "text-primary";
+            } else {
+                alert("사용 불가능한 계정입니다.");
+                isDuplicated = false;
+                duplicateMsg.textContent = "사용 불가능한 계정입니다.";
+                duplicateMsg.className = "text-danger";
+            }
+        });
     })
 
     // 회원 가입 요청
@@ -103,34 +98,29 @@
         e.preventDefault();
 
         // 유효성 검사
-        if(!validateSamePassword(password, password2)) return;
-        if(!validatePhoneNumber(phone)) return;
+        if (!validateSamePassword(password, password2)) return;
+        if (!validatePhoneNumber(phone)) return;
 
-        if(!isDuplicated){
+        if (!isDuplicated) {
             alert("계정 중복 체크를 해주세요.");
             return;
         }
 
-            fetch("insert", {
-                method: "POST",
-                body: formToSerialize("uForm"),
-                headers: {"Content-type": "application/json; charset=utf-8"}
-            }).then((res) => res.json())
-                .then((data) => {
-                    console.log("data" , data);
-                    if (data.status === 204) {
-                        alert("회원 가입에 성공했습니다.");
-                        // 페이지 리다이렉트
-                        location = "/member/login";
-                    } else {
-                        alert("회원 가입에 실패했습니다.");
-                    }
-                });
+        myFetch("insert", "uForm", (data) => {
+            console.log("data", data);
+            if (data.status === 204) {
+                alert("회원 가입에 성공했습니다.");
+                // 페이지 리다이렉트
+                location = "/member/loginForm";
+            } else {
+                alert("회원 가입에 실패했습니다.");
+            }
+        });
     })
 
 
     // id input 값을 수정하면, 계정 중복 검사 초기화
-    document.getElementById("id").addEventListener("blur",()=>{
+    document.getElementById("id").addEventListener("blur", () => {
         isDuplicated = false;
         duplicateMsg.textContent = "계정 중복 검사를 진행해주세요.";
         duplicateMsg.className = "text-danger";

@@ -64,12 +64,9 @@ const myFetch = (url, formId, handler) => {
 //첨부파일 업로드용 fetch()함수
 const myFileFetch  = (url, formId, handler) => {
     const param = new FormData(document.querySelector("#" + formId));
-    console.log("param", param);
-    console.log("param", param.get("content"));
-    // const csrfToken = document.querySelector("meta[name='_csrf']").content;
-    // const csrfHeader = document.querySelector("meta[name='_csrf_header']").content;
-    // fetch(url + "?_csrf=" + csrfToken, {
-    fetch(url, {
+    const csrfToken = document.querySelector("meta[name='_csrf']").content;
+    const csrfHeader = document.querySelector("meta[name='_csrf_header']").content;
+    fetch(url + "?_csrf=" + csrfToken, {
         method:"POST",
         body : param,
     }).then(res => res.json()).then(json => {

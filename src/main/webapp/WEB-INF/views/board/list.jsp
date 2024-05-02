@@ -133,6 +133,7 @@
         </div>
     </div>
 </div>
+<script type="text/javascript" src="/js/common.js"></script>
 <script>
     document
         .querySelector('.pagination')
@@ -240,15 +241,11 @@
         }
 
         // 비밀번호 확인 요청
-        fetch("checkPassword", {
-            method: "POST",
-            headers: {"Content-type": "application/json; charset=utf-8"},
-            body: JSON.stringify({
+        myFetch("checkPassword", {
                 id: selectedId,
                 password: password.value,
-            })
-        }).then((res) => res.json())
-            .then((data) => {
+            },
+            (data) => {
                 if (data.status === 204) {
                     // 이후, 요청 보내기
                     if (selectedMode === "update") {
@@ -257,30 +254,26 @@
                     }
                     if (selectedMode === "delete") {
                         if (confirm("정말 삭제하시겠습니까?")) {
-                            fetch("delete", {
-                                method: "POST",
-                                headers: {"Content-type": "application/json; charset=utf-8"},
-                                body: JSON.stringify({
+                            myFetch("delete", {
                                     id: selectedId,
                                     password: password.value
-                                })
-                            }).then((res) => res.json())
-                                .then((data) => {
+                                },
+                                (data) => {
                                     console.log("data", data);
-                                    if(data.status === 204){
+                                    if (data.status === 204) {
                                         alert("게시글 삭제에 성공했습니다.")
                                         const searchParams = new URLSearchParams(location.search);
-                                        location=`list?\${searchParams.toString()}`;
-                                    }else{
+                                        location = `list?\${searchParams.toString()}`;
+                                    } else {
                                         alert("게시글 삭제에 실패했습니다.")
                                     }
-                                })
+                                });
                         }
                     }
                 } else {
                     alert("비밀번호가 잘못되었습니다.");
                 }
-            })
+            });
 
         // 비밀번호 검증된 경우, 선택된 모드에 맞는 요청 보내기
     })

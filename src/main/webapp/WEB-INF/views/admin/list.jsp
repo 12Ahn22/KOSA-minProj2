@@ -97,6 +97,7 @@
         </ul>
     </div>
 </main>
+<script type="text/javascript" src="/js/common.js"></script>
 <script>
     document
         .querySelector('.pagination')
@@ -128,22 +129,16 @@
             // 계정 잠금 요청 보내기
             const id = e.target.value;
             const checked = e.target.checked;
-            fetch("updateAccountLock", {
-                method: "POST",
-                body: JSON.stringify({
-                    id,
-                    account_locked: checked ? 'Y' : 'N'
-                }),
-                headers: {"Content-type": "application/json; charset=utf-8"}
-            }).then((res) => res.json())
-                .then((data) => {
-                    if (data.status === 204) {
-                        alert("회원 잠금 변경에 성공했습니다.");
-                    } else {
-                        alert("회원 잠금 변경에 실패했습니다.");
-                    }
-                });
-
+            myFetch("updateAccountLock", {
+                id,
+                account_locked: checked ? 'Y' : 'N'
+            }, (data) => {
+                if (data.status === 204) {
+                    alert("회원 잠금 변경에 성공했습니다.");
+                } else {
+                    alert("회원 잠금 변경에 실패했습니다.");
+                }
+            })
         }
     })
 
@@ -151,15 +146,11 @@
     document.getElementById("table").addEventListener("click", (e) => {
         const searchParams = new URLSearchParams(location.search);
         if (e.target.name === "delete-btn") {
-            fetch("delete", {
-                method: "POST",
-                body: JSON.stringify({id: e.target.dataset["id"]}),
-                headers: {"Content-type": "application/json; charset=utf-8"}
-            }).then((res) => res.json())
-                .then((data) => {
+            myFetch("delete", {id: e.target.dataset["id"]},
+                (data) => {
                     if (data.status === 204) {
                         alert("회원 삭제에 성공했습니다.");
-                        location=`list?\${searchParams.toString()}`;
+                        location = `list?\${searchParams.toString()}`;
                     } else {
                         alert("회원 삭제에 실패했습니다.");
                     }
