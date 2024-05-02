@@ -33,8 +33,9 @@
         <%--        </c:forEach>--%>
     </div>
     <div>
+        <a class="btn btn-secondary" href="javascript:history.back();">목록</a>
         <a href="update?id=${member.id}" class="btn btn-primary">수정</a>
-        <button id="deleteBtn" class="btn btn-secondary">삭제</button>
+        <button id="deleteBtn" class="btn btn-danger">삭제</button>
     </div>
 </main>
 <script type="text/javascript" src="/js/common.js"></script>
