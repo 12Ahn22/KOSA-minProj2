@@ -49,8 +49,9 @@
         <c:forEach var="board" items="${pageResponseVO.list}">
             <tr>
                 <td>${board.id}</td>
-                <td><a data-bs-toggle="modal" data-bs-toggle="modal" data-bs-target="#boardViewModel"
-                       data-bs-id="${board.id}" data-bs-author="${board.author}">${board.title}</a></td>
+                <td>
+                    <c:if test="${board.isNew()}"><span class="badge text-bg-info">New</span></c:if>
+                    <a data-bs-toggle="modal" data-bs-toggle="modal" data-bs-target="#boardViewModel" data-bs-id="${board.id}" data-bs-author="${board.author}">${board.title}</a></td>
                 <td>${board.author}</td>
                 <td>${board.created_at}</td>
                 <td>${board.view_count}</td>
