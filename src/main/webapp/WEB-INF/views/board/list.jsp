@@ -252,7 +252,7 @@
                     // 이후, 요청 보내기
                     if (selectedMode === "update") {
                         // updateForm으로 이동
-                        location = `update?id=\${selectedId}`;
+                        location = `update?id=\${selectedId}&password=\${password.value}`;
                     }
                     if (selectedMode === "delete") {
                         if (confirm("정말 삭제하시겠습니까?")) {

@@ -52,7 +52,9 @@ public class BoardContorller {
     }
 
     @GetMapping("update")
-    public String updateForm(){
+    public String updateForm(BoardVO boardVO, Model model){
+        BoardVO findBoardVO = boardService.checkPassword(boardVO);
+        model.addAttribute("board", findBoardVO);
         return "board/updateForm";
     }
 
