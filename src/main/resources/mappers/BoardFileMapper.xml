@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.miniProj02.ayo.board.BoardFileMapper">
+    <insert id="insert" parameterType="BoardFileVO">
+        insert into board_files
+        (board_id ,original_filename ,real_filename ,content_type ,size)
+        values (#{board_id} ,#{original_filename} ,#{real_filename} ,#{content_type} ,#{size})
+    </insert>
+</mapper>

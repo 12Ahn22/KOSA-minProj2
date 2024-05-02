@@ -54,6 +54,9 @@
     </update>
 
     <insert id="insert" parameterType="BoardVO">
+        <selectKey order="AFTER" keyProperty="id" resultType="Long">
+            select LAST_INSERT_ID()
+        </selectKey>
         insert into boards (title, content, password, author)
         values(#{title}, #{content}, #{password}, #{author})
     </insert>

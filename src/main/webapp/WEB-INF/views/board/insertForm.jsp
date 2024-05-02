@@ -22,13 +22,15 @@
 <body>
 <%@include file="../include/header.jsp" %>
 <main class="container">
-	<form id="iForm" method="post">
-		<input type="hidden" name="author" id="author" value="${member.id}">
+	<form id="iForm" method="post" enctype="multipart/form-data">
 		<label for="title">제목:</label><br>
 		<input type="text" id="title" name="title" required><br>
 		<label>비밀번호:</label>
 		<input type="password" id="password" name="password" required><br>
 		<textarea id="editor" name="content"></textarea>
+		<div id="div_file">
+			<input  type='file' name='file' />
+		</div>
 		<input class="btn btn-primary" type="submit" value="생성">
 		<a class="btn btn-secondary" href="javascript:history.back();">취소</a>
 	</form>
@@ -47,7 +49,7 @@
 	const iForm = document.getElementById("iForm");
 	iForm.addEventListener('submit', (e) => {
 		e.preventDefault();
-		myFetch("insert", "iForm", json => {
+		myFileFetch("insert", "iForm", json => {
 			switch (json.status) {
 				case 204:
 					//성공

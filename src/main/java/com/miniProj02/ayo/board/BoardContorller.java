@@ -42,19 +42,21 @@ public class BoardContorller {
     }
 
     @GetMapping("insert")
-    public String insertForm(Authentication authentication, Model model){
-        MemberVO loginMember = (MemberVO) authentication.getPrincipal();
-        model.addAttribute("member", loginMember);
+    public String insertForm(){
         return "board/insertForm";
     }
 
     @PostMapping("insert")
     @ResponseBody
-    public Map<String, Object> insert(@RequestBody BoardVO boardVO){
+    public Map<String, Object> insert(BoardVO boardVO, Authentication authentication){
         log.info("=board/insert=");
         log.info("boardVO = {}", boardVO);
         Map<String, Object> map = new HashMap<>();
+        MemberVO loginMember = (MemberVO) authentication.getPrincipal();
+        boardVO.setAuthor(loginMember.getId());
+
         int updated = boardService.insert(boardVO);
+
         if(updated == 1){
             map.put("status", 204);
         }else{
