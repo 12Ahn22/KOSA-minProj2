@@ -35,4 +35,9 @@
         set title = #{title}, content = #{content}, password = #{password}
         where id = #{id}
     </update>
+
+    <insert id="insert" parameterType="BoardVO">
+        insert into boards (title, content, password, author)
+        values(#{title}, #{content}, #{password}, #{author})
+    </insert>
 </mapper>

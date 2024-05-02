@@ -4,11 +4,11 @@ import lombok.Data;
 
 @Data
 public class BoardVO {
-    private long id;
+    private Long id;
     private String title;
     private String author;
     private String content;
     private String password;
-    private int view_count;
+    private Integer view_count;
     private String created_at;
 }

@@ -4,6 +4,7 @@ import com.miniProj02.ayo.code.CodeService;
 import com.miniProj02.ayo.entity.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -39,15 +40,24 @@ public class BoardContorller {
     }
 
     @GetMapping("insert")
-    public String insertForm(){
+    public String insertForm(Authentication authentication, Model model){
+        MemberVO loginMember = (MemberVO) authentication.getPrincipal();
+        model.addAttribute("member", loginMember);
         return "board/insertForm";
     }
 
     @PostMapping("insert")
     @ResponseBody
     public Map<String, Object> insert(@RequestBody BoardVO boardVO){
+        log.info("=board/insert=");
+        log.info("boardVO = {}", boardVO);
         Map<String, Object> map = new HashMap<>();
-
+        int updated = boardService.insert(boardVO);
+        if(updated == 1){
+            map.put("status", 204);
+        }else{
+            map.put("status",404);
+        }
         return map;
     }
 
