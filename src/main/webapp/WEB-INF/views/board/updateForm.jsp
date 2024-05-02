@@ -14,6 +14,7 @@
     <meta charset="utf-8">
     <title>RATTY | 게시글 수정</title>
     <%@include file="../include/bootStrap.jsp" %>
+    <%@include file="../include/meta.jsp" %>
     <%-- ckeditor 관련 자바 스크립트  --%>
     <script src="https://cdn.ckeditor.com/ckeditor5/12.4.0/classic/ckeditor.js"></script>
     <script src="https://ckeditor.com/apps/ckfinder/3.5.0/ckfinder.js"></script>

@@ -14,6 +14,7 @@
     <meta charset="utf-8">
     <title>RATTY | 회원 수정</title>
     <%@include file="../include/bootStrap.jsp" %>
+    <%@include file="../include/meta.jsp" %>
 </head>
 <body>
 <%@include file="../include/header.jsp" %>

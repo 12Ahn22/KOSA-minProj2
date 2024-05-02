@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
@@ -24,7 +25,11 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
-                .csrf((csrf) -> csrf.disable())
+                /*
+		        csrf 토큰 활성화시 사용
+		        쿠키를 생성할 때 HttpOnly 태그를 사용하면 클라이언트 스크립트가 보호된 쿠키에 액세스하는 위험을 줄일 수 있으므로 쿠키의 보안을 강화할 수 있다.
+		        */
+                .csrf((csrf) -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
                 .authorizeHttpRequests((authorize) -> authorize
                         .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.ERROR).permitAll() // 이걸 해야 JSP 페이지를 포워딩 가능
                         .requestMatchers("/", "/images/**", "js/**", "/WEB-INF/**", "/intro", "/member/insertForm", "/member/loginForm", "/member/insert", "/member/login", "/member/duplicate").permitAll()
@@ -32,7 +37,7 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(exceptionHandling -> exceptionHandling
-                        .accessDeniedHandler((request, response, authException) -> response.sendRedirect("/"))
+                                .accessDeniedHandler((request, response, authException) -> response.sendRedirect("/"))
 //                        .authenticationEntryPoint((request, response, authException) -> response.sendRedirect("/"))
                 ) // 로그인&권한 없는 경우 리다이렉팅
                 .formLogin(form -> form
