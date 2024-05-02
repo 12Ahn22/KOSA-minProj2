@@ -59,9 +59,20 @@ public class BoardContorller {
     }
 
     @PostMapping("update")
-    public Map<String, Object> update(){
+    @ResponseBody
+    public Map<String, Object> update(BoardVO boardVO){
+        log.info("=board/update=");
+        log.info("=boardVO = {}", boardVO);
         Map<String, Object> map = new HashMap<>();
 
+        int updated = boardService.update(boardVO);
+        if(updated == 1){
+            // 성공
+            map.put("status",204);
+        }else{
+            // 실패
+            map.put("status", 404);
+        }
         return map;
     }
 

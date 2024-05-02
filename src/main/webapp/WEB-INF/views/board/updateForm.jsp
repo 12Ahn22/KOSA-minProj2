@@ -21,18 +21,20 @@
 <body>
 <%@include file="../include/header.jsp" %>
 <main class="container">
-    <form>
+    <form id="uForm" method="post" enctype="multipart/form-data">
         <input type="hidden" name="id" id="id" value="${board.id}">
         <input type="hidden" name="author" id="author" value="${board.author}">
         <label for="title">제목:</label><br>
+        <p><span>직성자: </span><span>${board.author}</span></p>
         <input type="text" id="title" name="title" value="${board.title}"><br>
         <label>비밀번호:</label>
         <input type="password" id="password" name="password"><br>
-        <div id="editor"></div>
+        <textarea id="editor" name="content"></textarea>
         <input class="btn btn-primary" type="submit" value="수정">
         <a class="btn btn-secondary" href="javascript:history.back();">취소</a>
     </form>
 </main>
+<script type="text/javascript" src="/js/common.js"></script>
 <script>
     let editor;
     ClassicEditor
@@ -45,6 +47,22 @@
         .catch(error => {
             console.error(error);
         });
+    const uForm = document.getElementById("uForm");
+    uForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        myFileFetch("update", "uForm", json => {
+            switch (json.status) {
+                case 204:
+                    //성공
+                    alert("게시물을 수정 하였습니다");
+                    // 새로 고침
+                    location.reload();
+                    break;
+                default:
+                    alert("게시물 수정에 실패했습니다");
+            }
+        });
+    })
 </script>
 </body>
 </html>

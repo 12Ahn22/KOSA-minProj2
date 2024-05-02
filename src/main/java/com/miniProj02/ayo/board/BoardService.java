@@ -35,4 +35,8 @@ public class BoardService {
     public int delete(BoardVO boardVO) {
         return boardMapper.delete(boardVO);
     }
+
+    public int update(BoardVO boardVO) {
+        return boardMapper.update(boardVO);
+    }
 }

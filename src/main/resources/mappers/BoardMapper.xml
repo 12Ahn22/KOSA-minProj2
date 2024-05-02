@@ -29,4 +29,10 @@
     <delete id="delete" parameterType="BoardVO">
         delete from boards where id = #{id} AND password = #{password}
     </delete>
+
+    <update id="update" parameterType="BoardVO">
+        update boards
+        set title = #{title}, content = #{content}, password = #{password}
+        where id = #{id}
+    </update>
 </mapper>

@@ -19,4 +19,6 @@ public interface BoardMapper {
     BoardVO checkPassword(BoardVO boardVO);
 
     int delete(BoardVO boardVO);
+
+    int update(BoardVO boardVO);
 }
