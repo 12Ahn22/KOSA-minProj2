@@ -212,7 +212,7 @@
                     span_author.innerText = board.author;
                     span_createdAt.innerText = board.created_at;
                     board_file.innerText = board.boardFileVO.original_filename;
-                    board_file.setAttribute("href",`fileDownload/\${board.boardFileVO.id}`);
+                    board_file.setAttribute("href",`fileDownload/\${board.id}`);
                     selectedId = board.id;
                 } else {
                     alert("게시글을 가져오는 데 실패했습니다.");

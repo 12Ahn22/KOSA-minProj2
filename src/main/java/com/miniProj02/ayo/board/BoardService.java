@@ -55,6 +55,10 @@ public class BoardService {
         return findBoardVO;
     }
 
+    public BoardFileVO getBoardFile(Long id) {
+        return boardFileMapper.getFile(BoardVO.builder().id(id).build());
+    }
+
     public BoardVO checkPassword(BoardVO boardVO) {
         return boardMapper.checkPassword(boardVO);
     }
