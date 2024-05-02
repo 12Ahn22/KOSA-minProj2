@@ -17,4 +17,9 @@
 <!--        일단 첨부 파일은 하나로 고정-->
         limit 0, 1
     </select>
+
+    <delete id="delete" parameterType="BoardFileVO">
+        delete from board_files
+        where id = #{id}
+    </delete>
 </mapper>

@@ -9,4 +9,6 @@ public interface BoardFileMapper {
     void insert(BoardFileVO boardFileVO);
 
     BoardFileVO getFile(BoardVO boardVO);
+
+    int delete(BoardFileVO boardFileVO);
 }

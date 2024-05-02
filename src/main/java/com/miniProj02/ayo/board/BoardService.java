@@ -76,12 +76,32 @@ public class BoardService {
     }
 
     public int update(BoardVO boardVO) {
-        return boardMapper.update(boardVO);
+        int updated = boardMapper.update(boardVO); // board 업데이트
+
+        // 해당 게시글과 연관된 파일 정보 가져오기 - 여기에 진짜 파일 경로가 있음
+        BoardFileVO prevFile = boardFileMapper.getFile(boardVO);
+        if (prevFile != null) {
+            log.info("=기존 파일 삭제== {}", prevFile);
+            
+            // 기존 파일 삭제
+            int deleteFile = boardFileMapper.delete(prevFile);
+            if(deleteFile == 1) deleteFile(prevFile);
+
+            // 새 파일 등록
+            BoardFileVO boardFileVO = writeFile(boardVO.getFile());
+            if (boardFileVO != null) {
+                // 첨부파일에 게시물의 아이디를 설정한다
+                boardFileVO.setBoard_id(boardVO.getId());
+                // 파일 정보를 DB에 저장한다
+                boardFileMapper.insert(boardFileVO);
+            }
+        }
+
+        return updated;
     }
 
     public int insert(BoardVO boardVO) {
         int updated = boardMapper.insert(boardVO);
-        log.info("insert(boardVO) = {}", boardVO);
 
         // MultipartFile 객체를 파일에 저장한다. - 실제로 저장소에 저장하는 행위이다.
         // - 만약 클라우드라면 클라우드 저장소에
@@ -114,7 +134,7 @@ public class BoardService {
         File realPath = new File(CURR_IMAGE_REPO_PATH + realFolder);
 
         //오늘 날짜에 대한 폴더가 없으면 생성한다.
-        if(!realPath.exists()) {
+        if (!realPath.exists()) {
             realPath.mkdirs();
         }
 
@@ -143,4 +163,21 @@ public class BoardService {
                 .build();
     }
 
+    /**
+     * 물리적인 저장소에서 해당 파일 삭제하기
+     */
+    private void deleteFile(BoardFileVO file) {
+        // 파일의 실제 경로 찾기
+        log.info("file.getReal_filename() {}", file.getReal_filename());
+        File deleteFile = new File(file.getReal_filename());
+
+        if (deleteFile.exists()) {
+            // 파일이 존재한다면 삭제
+            if(deleteFile.delete()){
+                log.info("파일 삭제 성공");
+            }else{
+                log.info("파일 삭제 실패");
+            }
+        }
+    }
 }

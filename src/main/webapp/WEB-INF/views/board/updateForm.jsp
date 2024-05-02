@@ -22,7 +22,7 @@
 <body>
 <%@include file="../include/header.jsp" %>
 <main class="container">
-    <form id="uForm" method="post">
+    <form id="uForm" method="post" enctype="multipart/form-data">
         <input type="hidden" name="id" id="id" value="${board.id}">
         <input type="hidden" name="author" id="author" value="${board.author}">
         <p><span>작성자: </span><span>${board.author}</span></p>
@@ -31,6 +31,9 @@
         <label>비밀번호:</label>
         <input type="password" id="password" name="password" required><br>
         <textarea id="editor" name="content"></textarea>
+        <div id="div_file">
+            <input  type='file' name='file' />
+        </div>
         <c:if test="${not empty board.boardFileVO}">
             <label>첨부파일 : </label><a id="board_file" href="fileDownload/${board.id}">${board.boardFileVO.original_filename}</a><br/>
         </c:if>
@@ -54,7 +57,7 @@
     const uForm = document.getElementById("uForm");
     uForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        myFetch("update", "uForm", json => {
+        myFileFetch("update", "uForm", json => {
             switch (json.status) {
                 case 204:
                     //성공
