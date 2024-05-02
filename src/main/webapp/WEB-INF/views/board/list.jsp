@@ -99,7 +99,11 @@
                 <label>작성자 : </label><span id="author"></span><br/>
                 <label>작성일 : </label><span id="created_at"></span><br/>
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer justify-content-between">
+                <div>
+                    <button type="button" class="btn btn-primary">수정</button>
+                    <button type="button" class="btn btn-danger">삭제</button>
+                </div>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
             </div>
         </div>
