@@ -60,7 +60,7 @@ public class BoardContorller {
 
     @PostMapping("update")
     @ResponseBody
-    public Map<String, Object> update(BoardVO boardVO){
+    public Map<String, Object> update(@RequestBody BoardVO boardVO){
         log.info("=board/update=");
         log.info("=boardVO = {}", boardVO);
         Map<String, Object> map = new HashMap<>();
