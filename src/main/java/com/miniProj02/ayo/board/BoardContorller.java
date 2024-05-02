@@ -90,11 +90,13 @@ public class BoardContorller {
 
     @GetMapping("view")
     @ResponseBody
-    public Map<String, Object> view(BoardVO boardVO){
+    public Map<String, Object> view(BoardVO boardVO, Authentication authentication){
         log.info("=board/view=");
         log.info("=boardVO = {}", boardVO);
         Map<String, Object> map = new HashMap<>();
-        BoardVO findBoardVO = boardService.view(boardVO);
+
+        BoardVO findBoardVO = boardService.view(boardVO, authentication);
+
         if(findBoardVO != null){
             map.put("board", findBoardVO);
             map.put("status", 204);

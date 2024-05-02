@@ -23,4 +23,6 @@ public interface BoardMapper {
     int update(BoardVO boardVO);
 
     int insert(BoardVO boardVO);
+
+    void increaseViewCount(BoardVO boardVO);
 }

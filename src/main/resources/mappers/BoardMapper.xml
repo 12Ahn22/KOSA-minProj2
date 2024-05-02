@@ -31,6 +31,12 @@
         where id = #{id}
     </select>
 
+    <update id="increaseViewCount" parameterType="BoardVO">
+        update boards
+        set view_count = view_count + 1
+        where id = #{id}
+    </update>
+
     <select id="checkPassword" resultType="BoardVO">
         select id, title, author, content, created_at, view_count
         from boards

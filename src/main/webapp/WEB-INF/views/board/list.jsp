@@ -50,7 +50,7 @@
             <tr>
                 <td>${board.id}</td>
                 <td><a data-bs-toggle="modal" data-bs-toggle="modal" data-bs-target="#boardViewModel"
-                       data-bs-id="${board.id}">${board.title}</a></td>
+                       data-bs-id="${board.id}" data-bs-author="${board.author}">${board.title}</a></td>
                 <td>${board.author}</td>
                 <td>${board.created_at}</td>
                 <td>${board.view_count}</td>
@@ -190,9 +190,10 @@
         selectedId = null;
         const a = e.relatedTarget;
         const id = a.getAttribute('data-bs-id');
+        const author = a.getAttribute('data-bs-author')
 
         // 요청
-        fetch(`view?id=\${id}`, {
+        fetch(`view?id=\${id}&author=\${author}`, {
             method: "GET",
             headers: {"Content-type": "application/json; charset=utf-8"}
         }).then((res) => res.json())
