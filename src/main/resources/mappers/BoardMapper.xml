@@ -16,6 +16,7 @@
         select id, title, author, content, created_at, password, view_count
         from boards
         <include refid="search"/>
+        order by id desc
         limit #{skip}, #{size}
     </select>
     <select id="getTotalCount">
