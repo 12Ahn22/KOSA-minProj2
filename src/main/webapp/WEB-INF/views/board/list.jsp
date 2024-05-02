@@ -95,7 +95,7 @@
             <div class="modal-body">
                 <label>게시물 번호:</label><span id="bno"></span><br/>
                 <label>제목 : </label><span id="title"></span><br/>
-                <label>내용 : </label><span id="content"></span><br/>
+                <div id="content"></div>
                 <label>ViewCount :</label><span id="view_count"></span><br/>
                 <label>작성자 : </label><span id="author"></span><br/>
                 <label>작성일 : </label><span id="created_at"></span><br/>
@@ -170,7 +170,7 @@
     const boardViewModel = document.getElementById("boardViewModel");
     const span_bno = document.getElementById("bno");
     const span_title = document.getElementById("title");
-    const span_content = document.getElementById("content");
+    const content = document.getElementById("content");
     const span_viewCount = document.getElementById("view_count");
     const span_author = document.getElementById("author");
     const span_createdAt = document.getElementById("created_at");
@@ -179,7 +179,7 @@
     boardViewModel.addEventListener('hidden.bs.modal', (e) => {
         span_bno.innerText = "";
         span_title.innerText = "";
-        span_content.innerText = "";
+        content.innerHTML = "";
         span_viewCount.innerText = "";
         span_author.innerText = "";
         span_createdAt.innerText = "";
@@ -201,7 +201,7 @@
                     const board = data.board;
                     span_bno.innerText = board.id;
                     span_title.innerText = board.title;
-                    span_content.innerText = board.content;
+                    content.innerHTML = board.content;
                     span_viewCount.innerText = board.view_count;
                     span_author.innerText = board.author;
                     span_createdAt.innerText = board.created_at;
