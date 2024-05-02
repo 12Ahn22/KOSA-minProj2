@@ -12,76 +12,131 @@
 <html>
 <head>
     <meta charset="utf-8">
-	<title>RATTY | 게시글</title>
-	<%@include file="../include/bootStrap.jsp" %>
+    <title>RATTY | 게시글</title>
+    <%@include file="../include/bootStrap.jsp" %>
 </head>
 <body>
 <%@include file="../include/header.jsp" %>
-<main>
-	<h1>게시물 리스트</h1>
-	<a class="btn btn-primary mb-2" href="insert">새 글 작성하기</a>
-	<form id="searchForm" method="get" action="list">
-		<select id="size" name="size" >
-			<c:forEach var="size" items="${sizes}">
-				<option value="${size.value}" ${pageRequestVO.size == size.codeid ? 'selected' : ''} >${size.name}</option>
-			</c:forEach>
-		</select>
-		<input
-				type="text"
-				name="searchKey"
-				id="searchKey"
-				placeholder="Search..."
-		/>
-		<input type="submit" value="검색" />
-	</form>
-	<table class="table">
-		<thead>
-		<tr>
-			<th scope="col">no</th>
-			<th scope="col">제목</th>
-			<th scope="col">작성자</th>
-			<th scope="col">작성일</th>
-			<th scope="col">조회수</th>
-		</tr>
-		</thead>
-		<tbody>
-		<c:forEach var="board" items="${pageResponseVO.list}">
-			<tr>
-				<td>${board.bno}</td>
-				<td><a data-bs-toggle="modal" data-bs-toggle="modal" data-bs-target="#boardViewModel" data-bs-bno="${board.bno}">${board.title}</a></td>
-				<td>${board.author}</td>
-				<td>${board.createdAt}</td>
-				<td>${board.viewCount}</td>
-			</tr>
-		</c:forEach>
-		</tbody>
-	</table>
-	<!--  페이지 네비게이션 바 출력  -->
-	<div class="float-end">
-		<ul class="pagination flex-wrap">
-			<c:if test="${pageResponseVO.prev}">
-				<li class="page-item">
-					<a class="page-link" data-num="${pageResponseVO.start -1}">이전</a>
-				</li>
-			</c:if>
+<main class="container">
+    <h1>게시물 리스트</h1>
+    <a class="btn btn-primary mb-2" href="insert">새 글 작성하기</a>
+    <form id="searchForm" method="get" action="list">
+        <select id="size" name="size">
+            <c:forEach var="size" items="${sizes}">
+                <option value="${size.value}" ${pageRequestVO.size == size.value ? 'selected' : ''} >${size.name}</option>
+            </c:forEach>
+        </select>
+        <input
+                type="text"
+                name="searchKey"
+                id="searchKey"
+                placeholder="Search..."
+        />
+        <input type="submit" value="검색" class="btn btn-primary"/>
+    </form>
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">no</th>
+            <th scope="col">제목</th>
+            <th scope="col">작성자</th>
+            <th scope="col">작성일</th>
+            <th scope="col">조회수</th>
+        </tr>
+        </thead>
+        <tbody>
+        <c:forEach var="board" items="${pageResponseVO.list}">
+            <tr>
+                <td>${board.id}</td>
+                <td><a data-bs-toggle="modal" data-bs-toggle="modal" data-bs-target="#boardViewModel"
+                       data-bs-id="${board.id}">${board.title}</a></td>
+                <td>${board.author}</td>
+                <td>${board.created_at}</td>
+                <td>${board.view_count}</td>
+            </tr>
+        </c:forEach>
+        </tbody>
+    </table>
+    <!--  페이지 네비게이션 바 출력  -->
+    <div class="float-end">
+        <ul class="pagination flex-wrap">
+            <c:if test="${pageResponseVO.prev}">
+                <li class="page-item">
+                    <a class="page-link" data-num="${pageResponseVO.start -1}">이전</a>
+                </li>
+            </c:if>
 
-			<c:forEach
-					begin="${pageResponseVO.start}"
-					end="${pageResponseVO.end}"
-					var="num"
-			>
-				<li class="page-item ${pageResponseVO.pageNo == num ? 'active':''}">
-					<a class="page-link" data-num="${num}">${num}</a>
-				</li>
-			</c:forEach>
+            <c:forEach
+                    begin="${pageResponseVO.start}"
+                    end="${pageResponseVO.end}"
+                    var="num">
+                <li class="page-item ${pageResponseVO.pageNo == num ? 'active':''}">
+                    <a class="page-link" data-num="${num}">${num}</a>
+                </li>
+            </c:forEach>
 
-			<c:if test="${pageResponseVO.next}">
-				<li class="page-item">
-					<a class="page-link" data-num="${pageResponseVO.end + 1}">다음</a>
-				</li>
-			</c:if>
-		</ul>
-	</div>
+            <c:if test="${pageResponseVO.next}">
+                <li class="page-item">
+                    <a class="page-link" data-num="${pageResponseVO.end + 1}">다음</a>
+                </li>
+            </c:if>
+        </ul>
+    </div>
 </main>
+<!-- 상세보기 Modal -->
+<div class="modal fade" id="boardViewModel" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">게시물 상세보기</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <label>게시물 번호:</label><span id="bno"></span><br/>
+                <label>제목 : </label><span id="title"></span><br/>
+                <label>내용 : </label><span id="content"></span><br/>
+                <label>ViewCount :</label><span id="viewCount"></span><br/>
+                <label>작성자 : </label><span id="author"></span><br/>
+                <label>작성일 : </label><span id="createdAt"></span><br/>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document
+        .querySelector('.pagination')
+        .addEventListener('click', function (e) {
+            e.preventDefault();
+
+            const target = e.target;
+
+            if (target.tagName !== 'A') {
+                return;
+            }
+            const num = target.dataset['num'];
+            const size = document.getElementById("size").value;
+            location = `?pageNo=\${num}&size=\${size}`;
+        });
+
+    const searchForm = document.getElementById("searchForm");
+    document.querySelector('#size').addEventListener('change', (e) => {
+        searchForm.submit();
+    });
+
+    searchForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        searchForm.submit();
+    });
+
+    const url = new URL(window.location.href);
+    const urlParams = url.searchParams;
+    const searchKey = document.getElementById("searchKey");
+    if(urlParams.get("searchKey")){
+        searchKey.value = urlParams.get("searchKey");
+    }
+</script>
 </body>
 </html>

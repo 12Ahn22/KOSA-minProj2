@@ -1,17 +1,40 @@
 package com.miniProj02.ayo.board;
 
-import com.miniProj02.ayo.entity.BoardVO;
+import com.miniProj02.ayo.code.CodeService;
+import com.miniProj02.ayo.entity.*;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller
 @RequestMapping("/board")
+@Slf4j
+@RequiredArgsConstructor
 public class BoardContorller {
+    private final CodeService codeService;
+    private final BoardService boardService;
+
     @GetMapping("list")
-    public String list(){
+    public String list(PageRequestVO pageRequestVO, BindingResult bindingResult, Model model){
+        log.info("=board/list=");
+        PageResponseVO<BoardVO> pageResponseVO = boardService.getList(pageRequestVO);
+        List<CodeVO> codeList = codeService.getList();
+        log.info("pageResponseVO {}", pageResponseVO);
+
+        if(bindingResult.hasErrors()){
+            log.info("error {}", bindingResult.getFieldErrors());
+            return "error";
+        }
+
+        model.addAttribute("pageResponseVO", pageResponseVO);
+        model.addAttribute("sizes", codeList);
         return "board/list";
     }
 
