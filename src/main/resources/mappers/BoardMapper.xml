@@ -3,15 +3,26 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.miniProj02.ayo.board.BoardMapper">
+    <sql id="search">
+        <where>
+            <if test="searchKey != null and searchKey != ''">
+                title like concat('%', #{searchKey}, '%') OR
+                content like concat('%', #{searchKey}, '%')
+            </if>
+        </where>
+    </sql>
+
     <select id="getList" resultType="BoardVO">
         select id, title, author, content, created_at, password, view_count
         from boards
+        <include refid="search"/>
         limit #{skip}, #{size}
     </select>
     <select id="getTotalCount">
         select
         count(*)
         from boards
+        <include refid="search"/>
     </select>
 
     <select id="view" resultType="BoardVO">

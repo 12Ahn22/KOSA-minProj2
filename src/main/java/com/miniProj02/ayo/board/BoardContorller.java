@@ -25,7 +25,9 @@ public class BoardContorller {
     @GetMapping("list")
     public String list(PageRequestVO pageRequestVO, BindingResult bindingResult, Model model){
         log.info("=board/list=");
+        log.info("{}", pageRequestVO);
         PageResponseVO<BoardVO> pageResponseVO = boardService.getList(pageRequestVO);
+
         List<CodeVO> codeList = codeService.getList();
         log.info("pageResponseVO {}", pageResponseVO);
 
@@ -89,6 +91,8 @@ public class BoardContorller {
     @GetMapping("view")
     @ResponseBody
     public Map<String, Object> view(BoardVO boardVO){
+        log.info("=board/view=");
+        log.info("=boardVO = {}", boardVO);
         Map<String, Object> map = new HashMap<>();
         BoardVO findBoardVO = boardService.view(boardVO);
         if(findBoardVO != null){

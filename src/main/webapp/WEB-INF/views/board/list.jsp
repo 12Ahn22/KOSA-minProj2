@@ -147,7 +147,8 @@
             }
             const num = target.dataset['num'];
             const size = document.getElementById("size").value;
-            location = `?pageNo=\${num}&size=\${size}`;
+            const searchKey = document.getElementById("searchKey").value;
+            location = `?pageNo=\${num}&size=\${size}&searchKey=\${searchKey}`;
         });
 
     const searchForm = document.getElementById("searchForm");
@@ -274,8 +275,6 @@
                     alert("비밀번호가 잘못되었습니다.");
                 }
             });
-
-        // 비밀번호 검증된 경우, 선택된 모드에 맞는 요청 보내기
     })
 </script>
 </body>

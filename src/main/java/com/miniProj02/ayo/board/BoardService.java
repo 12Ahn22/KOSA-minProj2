@@ -14,10 +14,11 @@ import java.util.List;
 public class BoardService {
     private final BoardMapper boardMapper;
     public PageResponseVO<BoardVO> getList(PageRequestVO pageRequestVO) {
+        List<BoardVO>  list = null;
         PageResponseVO<BoardVO> pageResponseVO = null;
         int total = 0;
 
-        List<BoardVO> list = boardMapper.getList(pageRequestVO);
+        list = boardMapper.getList(pageRequestVO);
         total = boardMapper.getTotalCount(pageRequestVO);
 
         pageResponseVO = new PageResponseVO<>(list,total, pageRequestVO.getPageNo(), pageRequestVO.getSize());
