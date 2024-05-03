@@ -1,5 +1,6 @@
 package com.miniProj02.ayo.member;
 
+import com.miniProj02.ayo.auth.MemberAuthChecker;
 import com.miniProj02.ayo.entity.MemberFormDTO;
 import com.miniProj02.ayo.entity.MemberVO;
 import jakarta.servlet.http.HttpSession;
@@ -33,7 +34,6 @@ public class MemberController {
 
     @GetMapping("insert")
     public String insert() {
-        log.info("=Member Insert Form=");
         return "member/insertForm";
     }
 
@@ -98,7 +98,7 @@ public class MemberController {
 
     @PostMapping("update")
     @ResponseBody
-    public Map<String, Object> update(@RequestBody @Valid MemberFormDTO memberFormDTO, BindingResult bindingResult) {
+    public Map<String, Object> update(@RequestBody @Valid MemberFormDTO memberFormDTO, BindingResult bindingResult, Authentication authentication) {
         log.info("=UPDATE Member=");
         log.info("=MemberVO = {}", memberFormDTO);
         Map<String, Object> map = new HashMap<>();
@@ -112,6 +112,13 @@ public class MemberController {
                 .address(memberFormDTO.getAddress())
                 .gender(memberFormDTO.getGender())
                 .build();
+
+        // 자신이 아니거나, 관리자가 아니라면
+        MemberVO login = (MemberVO) authentication.getPrincipal();
+        if (!MemberAuthChecker.check(memberVO.getId(), login)) {
+            map.put("status", 404);
+            return map;
+        }
 
         if (checkMemberFormDTO(bindingResult, map, memberVO)) return map;
 

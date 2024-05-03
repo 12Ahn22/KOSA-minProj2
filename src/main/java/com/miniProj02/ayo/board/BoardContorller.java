@@ -1,11 +1,13 @@
 package com.miniProj02.ayo.board;
 
+import com.miniProj02.ayo.auth.MemberAuthChecker;
 import com.miniProj02.ayo.code.CodeService;
 import com.miniProj02.ayo.entity.*;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -81,8 +83,15 @@ public class BoardContorller {
     }
 
     @GetMapping("update")
-    public String updateForm(BoardVO boardVO, Model model) {
+    public String updateForm(BoardVO boardVO, Model model, Authentication authentication) {
+        MemberVO login = (MemberVO) authentication.getPrincipal();
         BoardVO findBoardVO = boardService.fetchUpdateData(boardVO);
+
+        // 자신의 글이 아니거나, 관리자가 아니라면
+        if (!MemberAuthChecker.check(findBoardVO.getAuthor(), login)) {
+            return "error";
+        }
+
         String token = boardService.getBoardToken();
         model.addAttribute("token", token);
         model.addAttribute("board", findBoardVO);
@@ -91,10 +100,17 @@ public class BoardContorller {
 
     @PostMapping("update")
     @ResponseBody
-    public Map<String, Object> update(BoardVO boardVO) {
+    public Map<String, Object> update(BoardVO boardVO, Authentication authentication) {
         log.info("=board/update=");
         log.info("=boardVO = {}", boardVO);
         Map<String, Object> map = new HashMap<>();
+
+        // 자신의 글이 아니거나, 관리자가 아니라면
+        MemberVO login = (MemberVO) authentication.getPrincipal();
+        if (!MemberAuthChecker.check(boardVO.getAuthor(), login)) {
+            map.put("status", 404);
+            return map;
+        }
 
         int updated = boardService.update(boardVO);
         if (updated == 1) {
@@ -145,9 +161,16 @@ public class BoardContorller {
 
     @PostMapping("delete")
     @ResponseBody
-    public Map<String, Object> delete(@RequestBody BoardVO boardVO) {
+    public Map<String, Object> delete(@RequestBody BoardVO boardVO, Authentication authentication) {
         log.info("=board/delete=");
         Map<String, Object> map = new HashMap<>();
+
+        // 자신의 글이 아니거나, 관리자가 아니라면
+        MemberVO login = (MemberVO) authentication.getPrincipal();
+        if (!MemberAuthChecker.check(boardVO.getAuthor(), login)) {
+            map.put("status", 404);
+            return map;
+        }
 
         int updated = boardService.delete(boardVO);
         if (updated == 1) {
@@ -202,7 +225,7 @@ public class BoardContorller {
     @PostMapping("boardImageUpload")
     @ResponseBody
     // image는 enctype="multipart/form-data”로 요청이 온다.
-    public Map<String,Object> boardImageUpload(BoardImageFileVO boardImageFileVO){
+    public Map<String, Object> boardImageUpload(BoardImageFileVO boardImageFileVO) {
         log.info("=boardImageUpload=");
         log.info("boardImageFile => {}", boardImageFileVO);
         Map<String, Object> map = new HashMap<>();
@@ -239,20 +262,20 @@ public class BoardContorller {
             originName = URLEncoder.encode(originName, "UTF-8");
             //다운로드 할 때 헤더 설정
             response.setHeader("Cache-Control", "no-cache");
-            response.addHeader("Content-disposition", "attachment; fileName="+originName);
-            response.setContentLength((int)boardImageFileVO.getSize());
+            response.addHeader("Content-disposition", "attachment; fileName=" + originName);
+            response.setContentLength((int) boardImageFileVO.getSize());
             response.setContentType(boardImageFileVO.getContent_type());
 
             //파일을 바이너리로 바꿔서 담아 놓고 responseOutputStream에 담아서 보낸다.
             FileInputStream input = new FileInputStream(new File(boardImageFileVO.getReal_filename()));
 
             //outputStream에 8k씩 전달
-            byte[] buffer = new byte[1024*8];
+            byte[] buffer = new byte[1024 * 8];
 
-            while(true) {
+            while (true) {
                 int count = input.read(buffer);
-                if(count<0)break;
-                out.write(buffer,0,count);
+                if (count < 0) break;
+                out.write(buffer, 0, count);
             }
             input.close();
             out.close();
