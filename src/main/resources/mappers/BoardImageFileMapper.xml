@@ -18,6 +18,12 @@
         where id = #{id}
     </select>
 
+    <select id="getBoardImageFileListByBoardId" resultType="BoardImageFileVO">
+        select id,token, board_id, original_filename ,real_filename ,content_type ,size
+        from board_image_files
+        where board_id = #{id}
+    </select>
+
     <select id="getBoardImageFileList" resultType="BoardImageFileVO">
         select id,token ,original_filename ,real_filename ,content_type ,size
         from board_image_files
@@ -27,6 +33,7 @@
         </foreach>
     </select>
 
+    <!--내용 출력을 위한 이미지 단일 요청-->
     <select id="getBoardImages" resultType="BoardImageFileVO">
         select id,token ,original_filename ,real_filename ,content_type ,size
         from board_image_files

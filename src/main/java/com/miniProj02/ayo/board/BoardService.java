@@ -4,8 +4,8 @@ import com.miniProj02.ayo.entity.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -43,6 +43,7 @@ public class BoardService {
         return pageResponseVO;
     }
 
+    @Transactional
     public BoardVO view(BoardVO boardVO, Authentication authentication) {
         // 로그인한 세션 계정
         MemberVO loginMember = (MemberVO) authentication.getPrincipal();
@@ -72,21 +73,27 @@ public class BoardService {
         return findBoardVO;
     }
 
+    @Transactional
     public int delete(BoardVO boardVO) {
         return boardMapper.delete(boardVO);
     }
 
+    @Transactional
     public int update(BoardVO boardVO) {
         int updated = boardMapper.update(boardVO); // board 업데이트
 
         // 해당 게시글과 연관된 파일 정보 가져오기 - 여기에 진짜 파일 경로가 있음
+        BoardFileVO newFile = boardVO.getBoardFileVO();
         BoardFileVO prevFile = boardFileMapper.getFile(boardVO);
-        if (prevFile != null) {
-            log.info("=기존 파일 삭제== {}", prevFile);
 
-            // 기존 파일 삭제
-            int deleteFile = boardFileMapper.delete(prevFile);
-            if (deleteFile == 1) deleteFile(prevFile);
+        // 파일 요청이 온 경우
+        if (newFile != null && newFile.getSize() != 0) {
+
+            // 기존 파일이 존재한다면 기존 파일 삭제
+            if(prevFile != null){
+                int deleteFile = boardFileMapper.delete(prevFile); // DB 삭제
+                if (deleteFile == 1) deleteFile(prevFile); // 물리적 삭제
+            }
 
             // 새 파일 등록
             BoardFileVO boardFileVO = writeFile(boardVO.getFile());
@@ -98,9 +105,38 @@ public class BoardService {
             }
         }
 
+        String content = boardVO.getContent(); // 비교를 위한 게시글 내용
+        final String imageURL = "/board/image/";
+
+        // 1. token의 값에 대한 전체 이미지 목록
+        List<BoardImageFileVO> boardImageFiles = boardImageFileMapper.getBoardImages(boardVO.getToken());
+        // 1. 게시글 id 값에 대한 전체 이미지 목록
+        List<BoardImageFileVO> boardImageFilesByBoardId = boardImageFileMapper.getBoardImageFileListByBoardId(boardVO.getId());
+
+        // 검사할 이미지 파일 리스트를 합치기
+        boardImageFiles.addAll(boardImageFilesByBoardId);
+
+        //2. 게시물 내용 중 이미지가 사용중이 아니면 삭제 목록에 추가
+        List<BoardImageFileVO> deleteImageList = boardImageFiles.stream().filter(
+                //게시물 내용에 해당 이미지가 존재하지 않으면 삭제 대상
+                fileUpload -> !content.contains(imageURL + fileUpload.getId())
+        ).collect(Collectors.toList());
+
+        if (deleteImageList.size() != 0) {
+            //3. 삭제 목록에 있는 이미지를 (파일)삭제 한다
+            deleteImageList.stream().forEach(boardImageFile -> new File(boardImageFile.getReal_filename()).delete());
+            deleteImageList.stream().forEach((file) -> deleteFile(file));
+
+            //3. 삭제 목록에 있는 이미지를 (DB)삭제 한다
+            Map<String, Object> map = new HashMap<>();
+            map.put("list", deleteImageList);
+            boardImageFileMapper.deleteBoardImageFiles(map);
+        }
+
         return updated;
     }
 
+    @Transactional
     public int insert(BoardVO boardVO) {
         int updated = boardMapper.insert(boardVO);
 
@@ -134,7 +170,7 @@ public class BoardService {
         ).collect(Collectors.toList());
 
         if (deleteImageList.size() != 0) {
-            //3. 삭제 목록에 있는 이미지를 (파일)삭제 한다 - 지금 이게 안되는데
+            //3. 삭제 목록에 있는 이미지를 (파일)삭제 한다
             deleteImageList.stream().forEach(boardImageFile -> new File(boardImageFile.getReal_filename()).delete());
             deleteImageList.stream().forEach((file) -> deleteFile(file));
 
@@ -220,6 +256,7 @@ public class BoardService {
         return token;
     }
 
+    @Transactional
     public Long uploadBoardImage(String token, MultipartFile file) {
         // 실제로 파일을 물리적으로 저장, DB에 저장한다.
         // writeFile 메서드랑 아래부분만 다르네..흠...

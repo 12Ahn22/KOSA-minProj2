@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.util.HashMap;
@@ -24,6 +25,7 @@ public class SchedulerService {
     private final BoardImageFileMapper boardImageFileMapper;
 
     @Scheduled(fixedDelay = 60000) // 60초마다 실행
+    @Transactional
     public void fileTokenAutoDelete() {
         log.info("첨부 파일 업로드 중 완료되지 않음 파일을 삭제한다");
 

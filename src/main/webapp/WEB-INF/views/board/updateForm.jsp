@@ -23,6 +23,7 @@
 <%@include file="../include/header.jsp" %>
 <main class="container">
     <form id="uForm" method="post" enctype="multipart/form-data">
+        <input type="hidden" id="token" name="token" value="${token}">
         <input type="hidden" name="id" id="id" value="${board.id}">
         <input type="hidden" name="author" id="author" value="${board.author}">
         <p><span>작성자: </span><span>${board.author}</span></p>
@@ -44,12 +45,19 @@
 <script type="text/javascript" src="/js/common.js"></script>
 <script>
     let editor;
+    const csrfParameter = document.querySelector("meta[name='_csrf_parameter']").content;
+    const csrfToken = document.querySelector("meta[name='_csrf']").content;
+    const IMAGE_URL = "/board/boardImageUpload?token=${token}&" + csrfParameter + "=" + csrfToken;
     ClassicEditor
-        .create(document.querySelector('#editor'))
+        .create(document.querySelector('#editor'),{
+            ckfinder:{
+                uploadUrl: IMAGE_URL
+            }
+        })
         .then((newEditor) => {
             // 에디터 초기화 시, 초기값 설정
             editor = newEditor;
-            editor.setData("${board.content}");
+            editor.setData(`${board.content}`);
         })
         .catch(error => {
             console.error(error);

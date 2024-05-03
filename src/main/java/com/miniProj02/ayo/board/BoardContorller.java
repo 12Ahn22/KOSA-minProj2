@@ -80,6 +80,8 @@ public class BoardContorller {
     @GetMapping("update")
     public String updateForm(BoardVO boardVO, Model model) {
         BoardVO findBoardVO = boardService.fetchUpdateData(boardVO);
+        String token = boardService.getBoardToken();
+        model.addAttribute("token", token);
         model.addAttribute("board", findBoardVO);
         return "board/updateForm";
     }

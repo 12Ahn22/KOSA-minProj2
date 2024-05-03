@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -21,6 +22,7 @@ public class MemberService implements UserDetailsService {
     private final MemberMapper memberMapper;
     private final PasswordEncoder bCryptPasswordEncoder;
 
+    @Transactional
     public int insert(MemberVO memberVO) {
         memberVO.hashPassword(bCryptPasswordEncoder);
         return memberMapper.insert(memberVO);
@@ -31,15 +33,18 @@ public class MemberService implements UserDetailsService {
     }
 
 
+    @Transactional
     public int delete(MemberVO memberVO) {
         return memberMapper.delete(memberVO);
     }
 
+    @Transactional
     public int update(MemberVO memberVO) {
         if(!memberVO.getPassword().equals("") && memberVO.getPassword() != null) memberVO.hashPassword(bCryptPasswordEncoder);
         return memberMapper.update(memberVO);
     }
 
+    @Transactional
     public int adminUpdate(MemberVO memberVO) {
         if(!memberVO.getPassword().equals("") && memberVO.getPassword() != null) memberVO.hashPassword(bCryptPasswordEncoder);
         // 계정 잠금 값이 = null이면, "N"값
@@ -79,6 +84,7 @@ public class MemberService implements UserDetailsService {
         return pageResponseVO;
     }
 
+    @Transactional
     public int updateAccountLock(MemberVO memberVO) {
         return memberMapper.updateAccountLock(memberVO);
     }
