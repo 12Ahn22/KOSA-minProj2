@@ -10,9 +10,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -117,6 +116,36 @@ public class BoardService {
             // 파일 정보를 DB에 저장한다
             boardFileMapper.insert(boardFileVO);
         }
+
+        // 게시물 등록 시, 사용한 임시 토큰들의 상태를 0:사용중 -> 1: 사용 완료 상태로 변경한다.
+        boardTokenMapper.updateState(boardVO.getToken());
+
+        // 실제 게시글 내용에 사용된 이미지만 게시물 id와 연결시킨다.
+        String content = boardVO.getContent(); // 비교를 위한 게시글 내용
+        final String imageURL = "/board/image/";
+
+        // 1. token의 값에 대한 전체 이미지 목록
+        List<BoardImageFileVO> boardImageFiles = boardImageFileMapper.getBoardImages(boardVO.getToken());
+
+        //2. 게시물 내용 중 이미지가 사용중이 아니면 삭제 목록에 추가
+        List<BoardImageFileVO> deleteImageList = boardImageFiles.stream().filter(
+                //게시물 내용에 해당 이미지가 존재하지 않으면 삭제 대상
+                fileUpload -> !content.contains(imageURL + fileUpload.getId())
+        ).collect(Collectors.toList());
+
+        if (deleteImageList.size() != 0) {
+            //3. 삭제 목록에 있는 이미지를 (파일)삭제 한다
+            deleteImageList.stream().forEach(boardImageFile -> new File(boardImageFile.getReal_filename()).delete());
+
+            //3. 삭제 목록에 있는 이미지를 (DB)삭제 한다
+            Map<String, Object> map = new HashMap<>();
+            map.put("list", deleteImageList);
+            boardImageFileMapper.deleteBoardImageFiles(map);
+        }
+
+        //4. 게시물 이미지의 board_token 값을 bno로 변경한다
+        boardImageFileMapper.updateImageBoardId(boardVO);
+
         return updated;
     }
 

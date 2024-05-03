@@ -24,6 +24,9 @@ public class BoardVO {
     private String created_at;
     private Boolean isNew;
 
+    //게시물용 임시 토큰
+    private String token;
+
     // 업로드 파일 - 실제로 업로드 첨부 파일로 받은 파일이 들어가는 필드
     private MultipartFile file;
 

@@ -17,4 +17,24 @@
         from board_image_files
         where id = #{id}
     </select>
+
+    <select id="getBoardImages" resultType="BoardImageFileVO">
+        select id,token ,original_filename ,real_filename ,content_type ,size
+        from board_image_files
+        where token = #{token}
+    </select>
+
+    <delete id="deleteBoardImageFiles" >
+        delete from board_image_files
+        where id in
+        <foreach collection="list" item="item" open="(" separator="," close=")" >
+            #{item.id}
+        </foreach>
+    </delete>
+
+    <update id="updateImageBoardId" parameterType="BoardVO">
+        update board_image_files
+        set board_id = #{id}
+        where token = #{token}
+    </update>
 </mapper>

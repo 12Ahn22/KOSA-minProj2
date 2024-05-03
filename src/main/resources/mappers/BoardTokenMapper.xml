@@ -8,4 +8,10 @@
         (token)
         values (#{token})
     </insert>
+
+    <update id="updateState">
+        update board_tokens
+        set status = 1
+        where token = #{token}
+    </update>
 </mapper>
