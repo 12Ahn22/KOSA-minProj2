@@ -1,5 +1,6 @@
 package com.miniProj02.ayo.entity;
 
+import com.miniProj02.ayo.board.FileVO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,16 +11,14 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class BoardImageFileVO { // 첨부 파일 DB 테이블과 매핑되는 VO
+public class BoardImageFileVO implements FileVO {
     private Long id;
     private Long board_id;
-    private String token;
     private String original_filename;
     private String real_filename;
     private String content_type;
     private long size;
     private String created_at;
-
-    //업로드 파일
-    private MultipartFile upload;
+    private String token; // 토큰
+    private MultipartFile upload; // 업로드 파일
 }

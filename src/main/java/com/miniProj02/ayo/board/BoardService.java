@@ -83,10 +83,10 @@ public class BoardService {
         BoardFileVO prevFile = boardFileMapper.getFile(boardVO);
         if (prevFile != null) {
             log.info("=기존 파일 삭제== {}", prevFile);
-            
+
             // 기존 파일 삭제
             int deleteFile = boardFileMapper.delete(prevFile);
-            if(deleteFile == 1) deleteFile(prevFile);
+            if (deleteFile == 1) deleteFile(prevFile);
 
             // 새 파일 등록
             BoardFileVO boardFileVO = writeFile(boardVO.getFile());
@@ -134,8 +134,9 @@ public class BoardService {
         ).collect(Collectors.toList());
 
         if (deleteImageList.size() != 0) {
-            //3. 삭제 목록에 있는 이미지를 (파일)삭제 한다
+            //3. 삭제 목록에 있는 이미지를 (파일)삭제 한다 - 지금 이게 안되는데
             deleteImageList.stream().forEach(boardImageFile -> new File(boardImageFile.getReal_filename()).delete());
+            deleteImageList.stream().forEach((file) -> deleteFile(file));
 
             //3. 삭제 목록에 있는 이미지를 (DB)삭제 한다
             Map<String, Object> map = new HashMap<>();
@@ -153,7 +154,7 @@ public class BoardService {
      * MultipartFile 객체를 실제로 물리적인 공간에 저장하는 메서드
      */
     private BoardFileVO writeFile(MultipartFile file) {
-        if (file == null || file.getName() == null) return null;
+        if (file == null || file.getName() == null || file.getSize() == 0) return null;
 
         Calendar now = Calendar.getInstance();
         // 저장위치를 오늘의 날짜를 사용해 만든다. format은 위에 설정해놓았다.
@@ -197,16 +198,16 @@ public class BoardService {
     /**
      * 물리적인 저장소에서 해당 파일 삭제하기
      */
-    private void deleteFile(BoardFileVO file) {
+    private void deleteFile(FileVO file) {
         // 파일의 실제 경로 찾기
         log.info("file.getReal_filename() {}", file.getReal_filename());
         File deleteFile = new File(file.getReal_filename());
 
         if (deleteFile.exists()) {
             // 파일이 존재한다면 삭제
-            if(deleteFile.delete()){
+            if (deleteFile.delete()) {
                 log.info("파일 삭제 성공");
-            }else{
+            } else {
                 log.info("파일 삭제 실패");
             }
         }
@@ -268,7 +269,7 @@ public class BoardService {
         // insert가 완료된 후에는 boardImageFileVO에 해당 이미지의 id 값을 넣어준다.
         // - Mybatis의 selectKey
         boardImageFileMapper.insert(boardImageFileVO);
-        
+
         // 생성된 이미지의 id 값을 반환
         return boardImageFileVO.getId();
     }
