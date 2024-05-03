@@ -32,10 +32,11 @@ public class BoardContorller {
     private final ServletContext application;
 
     @GetMapping("list")
-    public String list(PageRequestVO pageRequestVO, BindingResult bindingResult, Model model) {
+    public String list(PageRequestVO pageRequestVO, BindingResult bindingResult, Model model, Authentication authentication) {
         log.info("=board/list=");
         log.info("{}", pageRequestVO);
         PageResponseVO<BoardVO> pageResponseVO = boardService.getList(pageRequestVO);
+        MemberVO login = (MemberVO) authentication.getPrincipal();
 
         List<CodeVO> codeList = codeService.getList();
         log.info("pageResponseVO {}", pageResponseVO);
@@ -47,6 +48,8 @@ public class BoardContorller {
 
         model.addAttribute("pageResponseVO", pageResponseVO);
         model.addAttribute("sizes", codeList);
+        model.addAttribute("isAdmin", login.getAuthName().equals("ADMIN"));
+        model.addAttribute("login", login.getId());
         return "board/list";
     }
 

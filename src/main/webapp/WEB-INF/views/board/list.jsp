@@ -103,7 +103,7 @@
                 <label>첨부파일 : </label><a id="board_file" href=""></a><br/>
             </div>
             <div class="modal-footer justify-content-between">
-                <div>
+                <div id="modal-modify-buttons" style="display: none">
                     <button type="button" class="btn btn-primary" data-bs-mode="update" data-bs-toggle="modal"
                             data-bs-target="#passwordModal">수정
                     </button>
@@ -178,7 +178,11 @@
     const span_author = document.getElementById("author");
     const span_createdAt = document.getElementById("created_at");
     const board_file = document.getElementById("board_file");
+
+    const modal_buttons_display = document.getElementById("modal-modify-buttons");
+
     let selectedId;
+
 
     boardViewModel.addEventListener('hidden.bs.modal', (e) => {
         span_bno.innerText = "";
@@ -195,6 +199,9 @@
         const a = e.relatedTarget;
         const id = a.getAttribute('data-bs-id');
         const author = a.getAttribute('data-bs-author')
+        if(author === `${login}` || ${isAdmin == true}){
+            modal_buttons_display.style.display = "block";
+        }else modal_buttons_display.style.display = "none";
 
         // 요청
         fetch(`view?id=\${id}&author=\${author}`, {
