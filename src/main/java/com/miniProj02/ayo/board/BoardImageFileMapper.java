@@ -18,4 +18,8 @@ public interface BoardImageFileMapper {
     void deleteBoardImageFiles(Map<String, Object> map);
 
     void updateImageBoardId(BoardVO boardVO);
+
+    List<BoardImageFileVO> getBoardImageFileList(Map<String, Object> map);
+
+    void deleteBoardImageFilesByTokens(Map<String, Object> map);
 }

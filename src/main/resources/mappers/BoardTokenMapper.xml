@@ -14,4 +14,22 @@
         set status = 1
         where token = #{token}
     </update>
+
+    <select id="listToken" resultType="BoardTokenVO">
+        <![CDATA[
+		SELECT
+			 token, status, created_at
+		FROM  board_tokens
+		where status = 0 and created_at < DATE_ADD(now(), INTERVAL -30 MINUTE)
+	]]>
+    </select>
+
+    <delete id="deleteTokens">
+        delete from board_tokens
+        where  token in
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item.token}
+        </foreach>
+    </delete>
+
 </mapper>
