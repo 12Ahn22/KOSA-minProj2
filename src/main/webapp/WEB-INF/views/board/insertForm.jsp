@@ -23,6 +23,7 @@
 <%@include file="../include/header.jsp" %>
 <main class="container">
 	<form id="iForm" method="post" enctype="multipart/form-data">
+		<input type="hidden" id="token" name="token" value="${token}"><br/>
 		<label for="title">제목:</label><br>
 		<input type="text" id="title" name="title" required><br>
 		<label>비밀번호:</label>

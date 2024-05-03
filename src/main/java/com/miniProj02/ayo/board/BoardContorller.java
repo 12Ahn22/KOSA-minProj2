@@ -48,7 +48,10 @@ public class BoardContorller {
     }
 
     @GetMapping("insert")
-    public String insertForm() {
+    public String insertForm(Model model) {
+        // insertForm에 접근하면 게시글 이미지용 임시 토큰을 발급해준다.
+        String token = boardService.getBoardToken();
+        model.addAttribute("token", token);
         return "board/insertForm";
     }
 

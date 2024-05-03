@@ -23,6 +23,7 @@ public class BoardService {
     // 첨부 파일을 저장할 경로
     private final String CURR_IMAGE_REPO_PATH = "c:\\upload-mini2";
     private final BoardFileMapper boardFileMapper;
+    private final BoardTokenMapper boardTokenMapper;
 
     // 날짜 서식을 생성한다
     // File.separator는 /폴더명/폴더명/ 이때, '/'를 의미한다.
@@ -179,5 +180,12 @@ public class BoardService {
                 log.info("파일 삭제 실패");
             }
         }
+    }
+
+    public String getBoardToken() {
+        // 토큰 생성
+        final String token = UUID.randomUUID().toString();
+        boardTokenMapper.insert(token);
+        return token;
     }
 }
