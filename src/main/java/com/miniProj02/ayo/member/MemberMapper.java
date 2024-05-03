@@ -29,4 +29,6 @@ public interface MemberMapper {
     void loginCountInc(MemberVO resultVO);
 
     void loginCountClear(String id);
+
+    void unlockMember();
 }

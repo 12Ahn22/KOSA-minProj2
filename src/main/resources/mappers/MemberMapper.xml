@@ -72,6 +72,7 @@
                 , account_locked = 'N'
             </otherwise>
         </choose>
+        , account_locked_time = current_timestamp()
         where id = #{id}
     </update>
 
@@ -93,4 +94,12 @@
         <include refid="search"/>
         limit #{skip}, #{size}
     </select>
+
+    <update id="unlockMember">
+        <![CDATA[
+            update members
+            set account_locked = 'N', login_count = 0
+            where account_locked = 'Y' and  account_locked_time < DATE_ADD(now(), INTERVAL -10 MINUTE)
+        ]]>
+    </update>
 </mapper>

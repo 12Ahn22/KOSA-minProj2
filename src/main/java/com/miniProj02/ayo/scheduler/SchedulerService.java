@@ -4,6 +4,7 @@ import com.miniProj02.ayo.board.BoardImageFileMapper;
 import com.miniProj02.ayo.board.BoardTokenMapper;
 import com.miniProj02.ayo.entity.BoardImageFileVO;
 import com.miniProj02.ayo.entity.BoardTokenVO;
+import com.miniProj02.ayo.member.MemberMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -23,6 +24,15 @@ import java.util.Map;
 public class SchedulerService {
     private final BoardTokenMapper boardTokenMapper;
     private final BoardImageFileMapper boardImageFileMapper;
+    private final MemberMapper memberMapper;
+
+    @Scheduled(fixedDelay = 60000) // 60초마다 실행
+    @Transactional
+    public void unlockMember(){
+        log.info("잠긴 계정 해제");
+        // 잠긴 멤버 중에서 잠긴 시간이 10분이 지났다면 unlock
+        memberMapper.unlockMember();
+    }
 
     @Scheduled(fixedDelay = 60000) // 60초마다 실행
     @Transactional

@@ -26,6 +26,7 @@ public class MemberVO  implements UserDetails {
     private String gender;
     private Integer auth;
     private String account_locked; // 계정 잠금 여부
+    private String account_locked_time; // 계정 잠긴 시간
     private Integer login_count; // 계정 로그인 시도 횟수
 
     public MemberVO hashPassword(PasswordEncoder passwordEncoder){
