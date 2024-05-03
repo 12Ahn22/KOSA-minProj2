@@ -24,6 +24,7 @@ public class BoardService {
     private final String CURR_IMAGE_REPO_PATH = "c:\\upload-mini2";
     private final BoardFileMapper boardFileMapper;
     private final BoardTokenMapper boardTokenMapper;
+    private final BoardImageFileMapper boardImageFileMapper;
 
     // 날짜 서식을 생성한다
     // File.separator는 /폴더명/폴더명/ 이때, '/'를 의미한다.
@@ -187,5 +188,63 @@ public class BoardService {
         final String token = UUID.randomUUID().toString();
         boardTokenMapper.insert(token);
         return token;
+    }
+
+    public Long uploadBoardImage(String token, MultipartFile file) {
+        // 실제로 파일을 물리적으로 저장, DB에 저장한다.
+        // writeFile 메서드랑 아래부분만 다르네..흠...
+        if (file == null) return null;
+
+        Calendar now = Calendar.getInstance();
+        // 저장위치를 오늘의 날짜를 사용해 만든다. format은 위에 설정해놓았다.
+        // 년도/월/날짜 구조를 가진 디렉터리 내부에 저장한다.
+        String realFolder = DATA_FORMAT.format(now.getTime());
+
+        // 실제 저장 위치를 생성한다.
+        // ex)  "c:\\upload-mini\2024\4\15"가 된다.
+        File realPath = new File(CURR_IMAGE_REPO_PATH + realFolder);
+
+        //오늘 날짜에 대한 폴더가 없으면 생성한다.
+        if (!realPath.exists()) {
+            realPath.mkdirs();
+        }
+
+        // 실제 파일명으로 사용할 이름을 생성한다
+        String fileNameReal = UUID.randomUUID().toString(); // 고유한 파일명을 위해 UUID를 사용
+        // 파일 실제 경로와 파일 이름을 사용해 File 객체를 생성한다.
+        File realFile = new File(realPath, fileNameReal); // (파일경로, 파일명)
+
+        // 파일을 실제 위치에 저장한다
+        try {
+            // 여기서 file이 실제 파일 정보가 들어있는 객체이다.
+            // realFile은 파일의 위치이다.
+            file.transferTo(realFile);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.info("transferTo : {}", e);
+            return null;
+        }
+
+        // 저장된 첨부파일 객체를 리턴한다
+        // 게시물에 내용에 추가되는 이미지 파일 객체를 생성한다
+        BoardImageFileVO boardImageFileVO = BoardImageFileVO.builder()
+                .token(token) // 임시 토큰을 사용해 객체를 생성
+                .content_type(file.getContentType())
+                .original_filename(file.getOriginalFilename())
+                .real_filename(realFile.getAbsolutePath())
+                .size(file.getSize())
+                .build();
+
+        // DB에 이미지 저장
+        // insert가 완료된 후에는 boardImageFileVO에 해당 이미지의 id 값을 넣어준다.
+        // - Mybatis의 selectKey
+        boardImageFileMapper.insert(boardImageFileVO);
+        
+        // 생성된 이미지의 id 값을 반환
+        return boardImageFileVO.getId();
+    }
+
+    public BoardImageFileVO getBoardImageFile(String id) {
+        return boardImageFileMapper.getBoardImageFile(id);
     }
 }

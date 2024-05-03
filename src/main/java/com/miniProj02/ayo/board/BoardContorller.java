@@ -2,6 +2,7 @@ package com.miniProj02.ayo.board;
 
 import com.miniProj02.ayo.code.CodeService;
 import com.miniProj02.ayo.entity.*;
+import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -27,6 +29,7 @@ import java.util.Map;
 public class BoardContorller {
     private final CodeService codeService;
     private final BoardService boardService;
+    private final ServletContext application;
 
     @GetMapping("list")
     public String list(PageRequestVO pageRequestVO, BindingResult bindingResult, Model model) {
@@ -190,4 +193,65 @@ public class BoardContorller {
             out.close();
         }
     }
+
+    @PostMapping("boardImageUpload")
+    @ResponseBody
+    // image는 enctype="multipart/form-data”로 요청이 온다.
+    public Map<String,Object> boardImageUpload(BoardImageFileVO boardImageFileVO){
+        log.info("=boardImageUpload=");
+        log.info("boardImageFile => {}", boardImageFileVO);
+        Map<String, Object> map = new HashMap<>();
+
+        // ckeditor 에서 파일을 보낼 때 upload : [파일] 형식으로 해서 넘어옴, upload라는 키 이용하여 파일을 저장 한다.
+        // 즉, BoardImageFileVO의 private MultipartFile upload에 실제 파일 데이터가 담겨있다.
+        MultipartFile file = boardImageFileVO.getUpload(); // 업로드할 실제 파일
+        String token = boardImageFileVO.getToken(); // 넘어온 임시로 사용할 토큰
+
+        // 이미지를 받아온 임시 토큰을 사용해 DB 저장한다.
+        Long uploadedFileId = boardService.uploadBoardImage(token, file);
+
+        // 이미지를 현재 경로와 연관된 파일에 저장하기 위해 현재 경로를 알아냄
+        String uploadPath = application.getContextPath() + "/board/image/" + uploadedFileId;
+
+        // ckeditor는 이미지 업로드 후 이미지 표시하기 위해 uploaded 와 url을 json 형식으로 받아야 함
+        log.info("image 경로 = {}", uploadPath);
+        map.put("uploaded", true); // 업로드 완료
+        map.put("url", uploadPath); // 업로드 파일의 경로
+
+        return map;
+    }
+
+    @GetMapping("image/{id}")
+    public void getBoardImage(@PathVariable String id, HttpServletResponse response) throws IOException {
+        OutputStream out = response.getOutputStream();
+
+        BoardImageFileVO boardImageFileVO = boardService.getBoardImageFile(id);
+
+        if (boardImageFileVO == null) {
+            response.setStatus(404);
+        } else {
+            String originName = boardImageFileVO.getOriginal_filename();
+            originName = URLEncoder.encode(originName, "UTF-8");
+            //다운로드 할 때 헤더 설정
+            response.setHeader("Cache-Control", "no-cache");
+            response.addHeader("Content-disposition", "attachment; fileName="+originName);
+            response.setContentLength((int)boardImageFileVO.getSize());
+            response.setContentType(boardImageFileVO.getContent_type());
+
+            //파일을 바이너리로 바꿔서 담아 놓고 responseOutputStream에 담아서 보낸다.
+            FileInputStream input = new FileInputStream(new File(boardImageFileVO.getReal_filename()));
+
+            //outputStream에 8k씩 전달
+            byte[] buffer = new byte[1024*8];
+
+            while(true) {
+                int count = input.read(buffer);
+                if(count<0)break;
+                out.write(buffer,0,count);
+            }
+            input.close();
+            out.close();
+        }
+    }
+
 }

@@ -38,9 +38,17 @@
 </main>
 <script type="text/javascript" src="/js/common.js"></script>
 <script>
+	const csrfParameter = document.querySelector("meta[name='_csrf_parameter']").content;
+	const csrfToken = document.querySelector("meta[name='_csrf']").content;
+	const IMAGE_URL = "/board/boardImageUpload?token=${token}&" + csrfParameter + "=" + csrfToken;
+
 	let editor;
 	ClassicEditor
-			.create(document.querySelector('#editor'))
+			.create(document.querySelector('#editor'),{
+				ckfinder:{
+					uploadUrl: IMAGE_URL
+				}
+			})
 			.then((newEditor) => {
 				editor = newEditor;
 			})

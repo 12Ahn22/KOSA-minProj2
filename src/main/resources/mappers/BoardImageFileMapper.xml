@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.miniProj02.ayo.board.BoardImageFileMapper">
+    <insert id="insert" parameterType="BoardImageFileVO">
+        <selectKey order="AFTER" keyProperty="id" resultType="long">
+            select LAST_INSERT_ID() id
+        </selectKey>
+        insert into board_image_files
+        (token ,original_filename ,real_filename ,content_type ,size)
+        values (#{token} ,#{original_filename} ,#{real_filename} ,#{content_type} ,#{size})
+    </insert>
+
+    <select id="getBoardImageFile" resultType="BoardImageFileVO">
+        select id,token ,original_filename ,real_filename ,content_type ,size
+        from board_image_files
+        where id = #{id}
+    </select>
+</mapper>
