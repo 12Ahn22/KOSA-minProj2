@@ -16,6 +16,6 @@ public class BoardFileVO implements FileVO { // 첨부 파일 DB 테이블과 �
     private String original_filename;
     private String real_filename;
     private String content_type;
-    private long size;
+    private Long size;
     private String created_at;
 }

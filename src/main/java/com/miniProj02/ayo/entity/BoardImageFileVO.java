@@ -17,7 +17,7 @@ public class BoardImageFileVO implements FileVO {
     private String original_filename;
     private String real_filename;
     private String content_type;
-    private long size;
+    private Long size;
     private String created_at;
     private String token; // 토큰
     private MultipartFile upload; // 업로드 파일

@@ -22,10 +22,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
@@ -198,39 +195,10 @@ public class BoardContorller {
     public void downloadFile(@PathVariable("id") Long id, HttpServletResponse response) throws IOException {
         log.info("FileDownload/{}", id);
 
-        OutputStream out = response.getOutputStream(); // 브라우저에 출력 스트림
         BoardFileVO boardFileVO = boardService.getBoardFile(id);
         log.info("boardFileVO = {}", boardFileVO);
 
-        if (boardFileVO == null) {
-            response.setStatus(404); // 파일이 없습니다. 404
-        } else {
-            String originName = boardFileVO.getOriginal_filename(); // 오리지널 이름이 보여주는 이름이다.
-            originName = URLEncoder.encode(originName, "UTF-8");
-            //다운로드 할 때 헤더 설정 (중요)
-            response.setHeader("Cache-Control", "no-cache");
-            // attachment; fileName=첨부파일명 >> 반드시 ;와 띄어쓰기 주의해야한다. (HTTP 규칙임)
-            response.addHeader("Content-disposition", "attachment; fileName=" + originName); // 저장 파일 명칭 설정
-            response.setContentLength((int) boardFileVO.getSize()); // 전체 파일 사이즈 (예측 시간을 측정해준다.)
-            response.setContentType(boardFileVO.getContent_type()); // 해당 첨부 파일의 콘텐츠 정보를 준다(파일 확장자명)
-
-            //파일을 바이너리로 바꿔서 담아 놓고 responseOutputStream에 담아서 보낸다.
-            // 바디에 관한 것이 실제 스트림 데이터이다. = 실제 파일
-            // 실제 파일이기 때문에 원본 경로를 사용한다.
-            FileInputStream input = new FileInputStream(new File(boardFileVO.getReal_filename()));
-
-            //outputStream에 8k씩 전달
-            byte[] buffer = new byte[1024 * 8]; // 파일을 블록단위로 읽어들이기 위해서 버퍼를 사용한다.
-
-            while (true) {
-                int count = input.read(buffer); // 파일을 읽기
-                if (count < 0) break; // 파일을 다 읽었다.
-                // 파일을 읽은 양을 브라우저에 기록한다.
-                out.write(buffer, 0, count); // 브라우저에 기록(출력)한다.
-            }
-            input.close();
-            out.close();
-        }
+        getFile(boardFileVO, response);
     }
 
     @PostMapping("boardImageUpload")
@@ -262,23 +230,26 @@ public class BoardContorller {
 
     @GetMapping("image/{id}")
     public void getBoardImage(@PathVariable String id, HttpServletResponse response) throws IOException {
-        OutputStream out = response.getOutputStream();
-
         BoardImageFileVO boardImageFileVO = boardService.getBoardImageFile(id);
+        getFile(boardImageFileVO, response);
+    }
 
-        if (boardImageFileVO == null) {
+    public void getFile(FileVO file, HttpServletResponse response) throws IOException {
+        OutputStream out = response.getOutputStream(); // 브라우저에 출력 스트림
+
+        if(file == null){
             response.setStatus(404);
-        } else {
-            String originName = boardImageFileVO.getOriginal_filename();
+        } else{
+            String originName = file.getOriginal_filename();
             originName = URLEncoder.encode(originName, "UTF-8");
             //다운로드 할 때 헤더 설정
             response.setHeader("Cache-Control", "no-cache");
             response.addHeader("Content-disposition", "attachment; fileName=" + originName);
-            response.setContentLength((int) boardImageFileVO.getSize());
-            response.setContentType(boardImageFileVO.getContent_type());
+            response.setContentLength(Math.toIntExact(file.getSize()));
+            response.setContentType(file.getContent_type());
 
             //파일을 바이너리로 바꿔서 담아 놓고 responseOutputStream에 담아서 보낸다.
-            FileInputStream input = new FileInputStream(new File(boardImageFileVO.getReal_filename()));
+            FileInputStream input = new FileInputStream(new File(file.getReal_filename()));
 
             //outputStream에 8k씩 전달
             byte[] buffer = new byte[1024 * 8];
@@ -292,5 +263,4 @@ public class BoardContorller {
             out.close();
         }
     }
-
 }
