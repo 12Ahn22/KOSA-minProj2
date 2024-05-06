@@ -57,6 +57,11 @@ public class BoardService {
         return findBoardVO;
     }
 
+    @Transactional
+    public BoardVO getBoard(BoardVO boardVO){
+        return boardMapper.view(boardVO);
+    }
+
     public BoardFileVO getBoardFile(Long id) {
         return boardFileMapper.getFile(BoardVO.builder().id(id).build());
     }

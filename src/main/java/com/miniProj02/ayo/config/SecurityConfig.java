@@ -32,7 +32,7 @@ public class SecurityConfig {
                 .csrf((csrf) -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
                 .authorizeHttpRequests((authorize) -> authorize
                         .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.ERROR).permitAll() // 이걸 해야 JSP 페이지를 포워딩 가능
-                        .requestMatchers("/", "/images/**", "js/**", "/WEB-INF/**", "/intro", "/member/insertForm", "/member/loginForm", "/member/insert", "/member/login", "/member/duplicate").permitAll()
+                        .requestMatchers("/","/test" , "/images/**", "js/**", "/WEB-INF/**", "/intro", "/member/insertForm", "/member/loginForm", "/member/insert", "/member/login", "/member/duplicate").permitAll()
                         .requestMatchers("/admin/*").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )

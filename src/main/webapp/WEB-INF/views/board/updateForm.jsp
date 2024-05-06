@@ -66,6 +66,7 @@
     uForm.addEventListener('submit', (e) => {
         e.preventDefault();
         myFileFetch("update", "uForm", json => {
+            console.log("결과 = ", json)
             switch (json.status) {
                 case 204:
                     //성공

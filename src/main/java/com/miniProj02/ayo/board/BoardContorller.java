@@ -3,11 +3,17 @@ package com.miniProj02.ayo.board;
 import com.miniProj02.ayo.auth.MemberAuthChecker;
 import com.miniProj02.ayo.code.CodeService;
 import com.miniProj02.ayo.entity.*;
+import com.miniProj02.ayo.exception.ErrorCode;
+import com.miniProj02.ayo.exception.MyException;
+import com.miniProj02.ayo.exception.enums.AuthErrorCode;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -100,16 +106,18 @@ public class BoardContorller {
 
     @PostMapping("update")
     @ResponseBody
-    public Map<String, Object> update(BoardVO boardVO, Authentication authentication) {
+    public ResponseEntity<Map<String, Object>> update(BoardVO boardVO, Authentication authentication) {
         log.info("=board/update=");
         log.info("=boardVO = {}", boardVO);
         Map<String, Object> map = new HashMap<>();
 
         // 자신의 글이 아니거나, 관리자가 아니라면
         MemberVO login = (MemberVO) authentication.getPrincipal();
-        if (!MemberAuthChecker.check(boardVO.getAuthor(), login)) {
-            map.put("status", 404);
-            return map;
+        BoardVO SelectedBoardVO = boardService.getBoard(boardVO); // 현재 선택된 board 가져오기
+        if (!MemberAuthChecker.check(SelectedBoardVO.getAuthor(), login)) {
+//            map.put("status", 404);
+//            return map;
+            throw new MyException(AuthErrorCode.RESOURCE_ACCESS_ERROR);
         }
 
         int updated = boardService.update(boardVO);
@@ -120,7 +128,8 @@ public class BoardContorller {
             // 실패
             map.put("status", 404);
         }
-        return map;
+//        return map;
+        return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
     @GetMapping("view")
@@ -161,15 +170,16 @@ public class BoardContorller {
 
     @PostMapping("delete")
     @ResponseBody
-    public Map<String, Object> delete(@RequestBody BoardVO boardVO, Authentication authentication) {
+    public HttpEntity<Map<String, Object>> delete(@RequestBody BoardVO boardVO, Authentication authentication) {
         log.info("=board/delete=");
         Map<String, Object> map = new HashMap<>();
 
         // 자신의 글이 아니거나, 관리자가 아니라면
         MemberVO login = (MemberVO) authentication.getPrincipal();
-        if (!MemberAuthChecker.check(boardVO.getAuthor(), login)) {
-            map.put("status", 404);
-            return map;
+        BoardVO SelectedBoardVO = boardService.getBoard(boardVO); // 현재 선택된 board 가져오기
+
+        if (!MemberAuthChecker.check(SelectedBoardVO.getAuthor(), login)) {
+            throw new MyException(AuthErrorCode.RESOURCE_ACCESS_ERROR);
         }
 
         int updated = boardService.delete(boardVO);
@@ -180,7 +190,7 @@ public class BoardContorller {
             // 실패
             map.put("status", 404);
         }
-        return map;
+        return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
     @GetMapping("fileDownload/{id}")
