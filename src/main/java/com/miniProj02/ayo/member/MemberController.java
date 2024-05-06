@@ -3,10 +3,16 @@ package com.miniProj02.ayo.member;
 import com.miniProj02.ayo.auth.MemberAuthChecker;
 import com.miniProj02.ayo.entity.MemberFormDTO;
 import com.miniProj02.ayo.entity.MemberVO;
+import com.miniProj02.ayo.exception.MyException;
+import com.miniProj02.ayo.exception.enums.AuthErrorCode;
+import com.miniProj02.ayo.exception.enums.CommonErrorCode;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -39,7 +45,7 @@ public class MemberController {
 
     @PostMapping("insert")
     @ResponseBody
-    public Map<String, Object> insert(@RequestBody @Valid MemberFormDTO memberFormDTO, BindingResult bindingResult) {
+    public HttpEntity<Map<String, Object>> insert(@RequestBody @Valid MemberFormDTO memberFormDTO, BindingResult bindingResult) {
         log.info("=Insert Member= {}", memberFormDTO);
         Map<String, Object> map = new HashMap<>();
 
@@ -53,31 +59,29 @@ public class MemberController {
                 .gender(memberFormDTO.getGender())
                 .build();
 
-        if (checkMemberFormDTO(bindingResult, map, memberVO)) return map;
+        checkMemberFormDTO(bindingResult, memberVO);
 
         int updated = memberService.insert(memberVO);
         // 이 아래를 한번에 처리 하는 방법이 없으려나?
         if (updated == 1) { // 성공
             map.put("status", 204);
         } else {
-            map.put("status", 404);
-            map.put("statusMessage", "회원 가입에 실패했습니다.");
+            throw new MyException(CommonErrorCode.NOT_CHANGED);
         }
-        return map;
+        return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
     @PostMapping("duplicate")
     @ResponseBody
-    public Map<String, Object> isDuplicated(@RequestBody MemberVO memberVO) {
+    public HttpEntity<Map<String, Object>> isDuplicated(@RequestBody MemberVO memberVO) {
         Map<String, Object> map = new HashMap<>();
         MemberVO searchMember = memberService.view(memberVO);
         if (searchMember == null) {
             map.put("status", 204);
         } else {
-            map.put("status", 404);
-            map.put("statusMessage", "해당 아이디는 이미 사용중입니다.");
+            throw new MyException(CommonErrorCode.DUPLICATED);
         }
-        return map;
+        return new ResponseEntity<>(map,HttpStatus.OK);
     }
 
     @GetMapping("profile")
@@ -98,7 +102,7 @@ public class MemberController {
 
     @PostMapping("update")
     @ResponseBody
-    public Map<String, Object> update(@RequestBody @Valid MemberFormDTO memberFormDTO, BindingResult bindingResult, Authentication authentication) {
+    public HttpEntity<Map<String, Object>> update(@RequestBody @Valid MemberFormDTO memberFormDTO, BindingResult bindingResult, Authentication authentication) {
         log.info("=UPDATE Member=");
         log.info("=MemberVO = {}", memberFormDTO);
         Map<String, Object> map = new HashMap<>();
@@ -116,26 +120,24 @@ public class MemberController {
         // 자신이 아니거나, 관리자가 아니라면
         MemberVO login = (MemberVO) authentication.getPrincipal();
         if (!MemberAuthChecker.check(memberVO.getId(), login)) {
-            map.put("status", 404);
-            return map;
+            throw new MyException(AuthErrorCode.RESOURCE_ACCESS_ERROR);
         }
 
-        if (checkMemberFormDTO(bindingResult, map, memberVO)) return map;
+        checkMemberFormDTO(bindingResult, memberVO);
 
         int updated = memberService.update(memberVO);
 
         if (updated == 1) { // 성공
             map.put("status", 204);
         } else {
-            map.put("status", 404);
-            map.put("statusMessage", "회원 수정에 실패했습니다.");
+            throw new MyException(CommonErrorCode.NOT_CHANGED);
         }
-        return map;
+        return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
     @PostMapping("delete")
     @ResponseBody
-    public Map<String, Object> delete(@RequestBody MemberVO memberVO, HttpSession session) {
+    public HttpEntity<Map<String, Object>> delete(@RequestBody MemberVO memberVO, HttpSession session) {
         log.info("=DELETE Member=");
         log.info("=MemberVO = {}", memberVO);
         Map<String, Object> map = new HashMap<>();
@@ -147,31 +149,25 @@ public class MemberController {
             // 세션에서 제거
             session.invalidate();
         } else {
-            map.put("status", 404);
-            map.put("statusMessage", "회원 탈퇴에 실패했습니다.");
+            throw new MyException(CommonErrorCode.NOT_CHANGED);
         }
-        return map;
+        return new ResponseEntity<>(map,HttpStatus.OK);
     }
 
     /**
      * insert, update validation check
      */
-    private boolean checkMemberFormDTO(BindingResult bindingResult, Map<String, Object> map, MemberVO memberVO) {
+    private void checkMemberFormDTO(BindingResult bindingResult, MemberVO memberVO) {
         if (bindingResult.hasErrors()) {
             log.info("member/insert error => {}", memberVO);
-            
-            map.put("status", 404);
             // 에러들 확인
             for (FieldError error : bindingResult.getFieldErrors()) {
                 String fieldName = error.getField();
                 String errorMessage = error.getDefaultMessage();
                 log.error("filedName =>{}", fieldName);
                 log.error("errorMessage =>{}", errorMessage);
-                // 가장 마지막 에러 넣어서 보내기
-                map.put("statusMessage", errorMessage);
             }
-            return true;
+            throw new MyException(CommonErrorCode.INVALID_PARAMETER);
         }
-        return false;
     }
 }

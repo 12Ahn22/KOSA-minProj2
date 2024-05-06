@@ -6,6 +6,7 @@ import com.miniProj02.ayo.entity.*;
 import com.miniProj02.ayo.exception.ErrorCode;
 import com.miniProj02.ayo.exception.MyException;
 import com.miniProj02.ayo.exception.enums.AuthErrorCode;
+import com.miniProj02.ayo.exception.enums.CommonErrorCode;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -83,7 +84,7 @@ public class BoardContorller {
         if (updated == 1) {
             map.put("status", 204);
         } else {
-            map.put("status", 404);
+            throw new MyException(CommonErrorCode.NOT_CHANGED);
         }
         return map;
     }
@@ -126,7 +127,7 @@ public class BoardContorller {
             map.put("status", 204);
         } else {
             // 실패
-            map.put("status", 404);
+            throw new MyException(CommonErrorCode.NOT_CHANGED);
         }
 //        return map;
         return new ResponseEntity<>(map, HttpStatus.OK);
@@ -145,7 +146,7 @@ public class BoardContorller {
             map.put("board", findBoardVO);
             map.put("status", 204);
         } else {
-            map.put("status", 404);
+            throw new MyException(CommonErrorCode.NOT_CHANGED);
         }
         return map;
     }
@@ -162,7 +163,7 @@ public class BoardContorller {
             map.put("board", findBoardVO);
             map.put("status", 204);
         } else {
-            map.put("status", 404);
+            throw new MyException(CommonErrorCode.NOT_CHANGED);
         }
 
         return map;
@@ -188,7 +189,7 @@ public class BoardContorller {
             map.put("status", 204);
         } else {
             // 실패
-            map.put("status", 404);
+            throw new MyException(CommonErrorCode.NOT_CHANGED);
         }
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
