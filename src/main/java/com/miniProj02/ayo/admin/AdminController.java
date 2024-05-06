@@ -5,11 +5,16 @@ import com.miniProj02.ayo.entity.CodeVO;
 import com.miniProj02.ayo.entity.MemberVO;
 import com.miniProj02.ayo.entity.PageRequestVO;
 import com.miniProj02.ayo.entity.PageResponseVO;
+import com.miniProj02.ayo.exception.MyException;
+import com.miniProj02.ayo.exception.enums.CommonErrorCode;
 import com.miniProj02.ayo.member.MemberService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -64,7 +69,7 @@ public class AdminController {
 
     @PostMapping("update")
     @ResponseBody
-    public Map<String,Object> update(@RequestBody MemberVO memberVO){
+    public HttpEntity<Map<String,Object>> update(@RequestBody MemberVO memberVO){
         log.info("=admin/update=");
         log.info("MemberVO = {}", memberVO);
         Map<String,Object> map = new HashMap<>();
@@ -74,10 +79,9 @@ public class AdminController {
         if(updated == 1) { // 성공
             map.put("status", 204);
         } else {
-            map.put("status", 404);
-            map.put("statusMessage", "회원 수정에 실패했습니다.");
+            throw new MyException(CommonErrorCode.NOT_CHANGED);
         }
-        return map;
+        return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
     @PostMapping("updateAccountLock")
@@ -91,8 +95,7 @@ public class AdminController {
         if(updated == 1) { // 성공
             map.put("status", 204);
         } else {
-            map.put("status", 404);
-            map.put("statusMessage", "회원 잠금에 실패했습니다.");
+            throw new MyException(CommonErrorCode.NOT_CHANGED);
         }
         return map;
     }
@@ -109,8 +112,7 @@ public class AdminController {
         if(updated == 1) { // 성공
             map.put("status", 204);
         } else {
-            map.put("status", 404);
-            map.put("statusMessage", "회원 삭제에 실패했습니다.");
+            throw new MyException(CommonErrorCode.NOT_CHANGED);
         }
         return map;
     }
