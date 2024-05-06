@@ -88,7 +88,7 @@ public class BoardService {
         int updated = boardMapper.update(boardVO); // board 업데이트
 
         // 해당 게시글과 연관된 파일 정보 가져오기 - 여기에 진짜 파일 경로가 있음
-        BoardFileVO newFile = boardVO.getBoardFileVO();
+        MultipartFile newFile = boardVO.getFile();
         BoardFileVO prevFile = boardFileMapper.getFile(boardVO);
 
         // 파일 요청이 온 경우

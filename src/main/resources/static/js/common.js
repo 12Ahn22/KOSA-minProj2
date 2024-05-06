@@ -71,7 +71,6 @@ const myFileFetch  = (url, formId, handler) => {
         body : param,
     }).then(res => res.json()).then(json => {
         //서버로 부터 받은 결과를 사용해서 처리 루틴 구현
-        console.log("json ", json );
         if (handler) handler(json);
     });
 }
